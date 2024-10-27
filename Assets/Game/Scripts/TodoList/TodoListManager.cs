@@ -14,23 +14,24 @@ public class TodoListManager : MonoBehaviour
     
     List<TodoListObject> _todoListObjects = new List<TodoListObject>();
     int _characterLimit = 30;
-    int _index = 0;
+    int _amountListObjects = 0;
+    
     string _filePath => Application.persistentDataPath + "/todolist.txt";
 
     private void Awake()
     {
         _addInputFields = _addPanel.GetComponentsInChildren<TMP_InputField>();
+        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text, false); } );
+        InitInputFields();
     }
 
     private void Start()
     {
         LoadJSONData();
-        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text); } );
-        InitInputFields();
     }
     
     // Creates a new item to add to the to-do list
-    private void CreateTodoListItem(string name, string type, bool isLoading=false)
+    private void CreateTodoListItem(string name, string topic, bool isChecked, bool isLoading=false)
     {
         if (!isLoading && !AreInputFieldsFilledIn())
         {
@@ -40,12 +41,12 @@ public class TodoListManager : MonoBehaviour
 
         GameObject item = Instantiate(_todoListItemPrefab, _content);
         TodoListObject itemObject = item.GetComponent<TodoListObject>();
-        itemObject.SetObjectInfo(name, type, _index);
+        itemObject.SetObjectInfo(name, topic, isChecked);
         _todoListObjects.Add(itemObject);
         TodoListObject temp = itemObject;
         itemObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckItem(temp); });
 
-        _index++;
+        _amountListObjects++;
         if (!isLoading)
         {
             SaveJSON();
@@ -57,7 +58,7 @@ public class TodoListManager : MonoBehaviour
     private void CheckItem(TodoListObject item)
     {
         _todoListObjects.Remove(item);
-        _index--;
+        _amountListObjects--;
         SaveJSON();
         Destroy(item.gameObject);
     }
@@ -95,8 +96,7 @@ public class TodoListManager : MonoBehaviour
     // Shows a visual error to the player if any of the input fields hasn't been filled in
     private void ShowInputFieldError()
     {
-        Debug.Log("� FDP ALGU�M N�O BOTOU OS TEXTOS NAS CAIXINHAS .");
-        // CODE NECESSARY
+        // Codigo para mostrar erro criacao
     }
 
     #endregion
@@ -124,9 +124,9 @@ public class TodoListManager : MonoBehaviour
     {
         string contents = "";
         
-        for (int todoListObjectIndex = 0; todoListObjectIndex < _index; todoListObjectIndex++)
+        for (int todoListObjectIndex = 0; todoListObjectIndex < _amountListObjects; todoListObjectIndex++)
         {
-            TodoListItem temp = new TodoListItem(_todoListObjects[todoListObjectIndex].objName, _todoListObjects[todoListObjectIndex].type, _todoListObjects[todoListObjectIndex].index);
+            TodoListItem temp = new TodoListItem(_todoListObjects[todoListObjectIndex].objName, _todoListObjects[todoListObjectIndex].topic, _todoListObjects[todoListObjectIndex].isChecked);
             contents += JsonUtility.ToJson(temp) + "\n";
         }
 
@@ -141,13 +141,13 @@ public class TodoListManager : MonoBehaviour
 
             string[] splitContents = contents.Split('\n');
 
-            _index = 0; // Confirmar que o index comece como 0 antes de fazer load de dados
+            _amountListObjects = 0; // Confirmar que o index comece como 0 antes de fazer load de dados
             foreach (string content in splitContents)
             {
                 if(content.Trim() != "")
                 {
                     TodoListItem temp = JsonUtility.FromJson<TodoListItem>(content);
-                    CreateTodoListItem(temp.objName, temp.type, true);
+                    CreateTodoListItem(temp.objName, temp.topic, true);
                 }
             }
         }
@@ -159,14 +159,14 @@ public class TodoListManager : MonoBehaviour
     public class TodoListItem
     {
         public string objName;
-        public string type;
-        public int index;
+        public string topic;
+        public bool isChecked;
 
-        public TodoListItem(string name, string type, int index)
+        public TodoListItem(string name, string topic, bool isChecked)
         {
             this.objName = name;
-            this.type = type;
-            this.index = index;
+            this.topic = topic;
+            this.isChecked = isChecked;
         }
     }
 }

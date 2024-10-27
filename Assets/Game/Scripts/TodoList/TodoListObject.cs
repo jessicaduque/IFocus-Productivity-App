@@ -1,25 +1,24 @@
+using System;
 using UnityEngine;
-using TMPro; // Biblioteca de texto 
+using TMPro;
+using UnityEngine.UI; 
 
 public class TodoListObject : MonoBehaviour
 {
     public string objName;
-    public string type;
-    public int index;
+    public string topic;
+    public bool isChecked;
 
-    TextMeshProUGUI t_item;
+    [SerializeField] Image im_line;
+    [SerializeField] TextMeshProUGUI t_item;
 
-    private void Awake()
-    {
-        t_item = GetComponentInChildren<TextMeshProUGUI>();
-    }
-
-    public void SetObjectInfo(string name, string type, int index)
+    public void SetObjectInfo(string name, string type, bool isChecked)
     {
         this.objName = name;
-        this.type = type;
-        this.index = index;
+        this.topic = type;
+        this.isChecked = isChecked;
 
         t_item.text = objName;
+        im_line.gameObject.SetActive(true);
     }
 }
