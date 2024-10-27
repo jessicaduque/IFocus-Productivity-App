@@ -11,8 +11,8 @@ public class TodoListManager : MonoBehaviour
     [SerializeField] Button b_create;
     [SerializeField] GameObject _todoListItemPrefab;
     [SerializeField] TMP_InputField[] _addInputFields;
+    
     List<TodoListObject> _todoListObjects = new List<TodoListObject>();
-
     int _characterLimit = 30;
     int _index = 0;
     string _filePath => Application.persistentDataPath + "/todolist.txt";
@@ -95,7 +95,7 @@ public class TodoListManager : MonoBehaviour
     // Shows a visual error to the player if any of the input fields hasn't been filled in
     private void ShowInputFieldError()
     {
-        Debug.Log("Ô FDP ALGUÉM NÃO BOTOU OS TEXTOS NAS CAIXINHAS .");
+        Debug.Log("ï¿½ FDP ALGUï¿½M Nï¿½O BOTOU OS TEXTOS NAS CAIXINHAS .");
         // CODE NECESSARY
     }
 
