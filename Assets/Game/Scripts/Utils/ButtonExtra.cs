@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class ButtonExtra : MonoBehaviour
 {
     private Button _thisButton;
+
+    [SerializeField] private bool sensitiveToTransparency = true;
     // _audioManager => AudioManager.I;
 
     private void Awake()
@@ -15,7 +17,7 @@ public class ButtonExtra : MonoBehaviour
 
     private void Start()
     {
-        _thisButton.targetGraphic.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.8f;
+        if(sensitiveToTransparency) _thisButton.targetGraphic.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
     }
 
     private void OnEnable()
@@ -32,7 +34,7 @@ public class ButtonExtra : MonoBehaviour
     {
         //_audioManager.PlaySfx("buttonclick");
         _thisButton.interactable = false;
-        StartCoroutine(Reset());
+        if(isActiveAndEnabled) StartCoroutine(Reset());
     }        
 
     IEnumerator Reset()

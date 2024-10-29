@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using Utils.Singleton;
 
-public class TodoListManager : MonoBehaviour
+public class TodoListManager : Singleton<TodoListManager>
 {
     [SerializeField] Transform _content;
     [SerializeField] GameObject _addPanel;
@@ -21,7 +22,7 @@ public class TodoListManager : MonoBehaviour
     private void Awake()
     {
         _addInputFields = _addPanel.GetComponentsInChildren<TMP_InputField>();
-        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text, false); } );
+        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text); } );
         InitInputFields();
     }
 
@@ -31,7 +32,7 @@ public class TodoListManager : MonoBehaviour
     }
     
     // Creates a new item to add to the to-do list
-    private void CreateTodoListItem(string name, string topic, bool isChecked, bool isLoading=false)
+    private void CreateTodoListItem(string name, string topic, bool isChecked=false, bool isLoading=false)
     {
         if (!isLoading && !AreInputFieldsFilledIn())
         {
@@ -44,25 +45,50 @@ public class TodoListManager : MonoBehaviour
         itemObject.SetObjectInfo(name, topic, isChecked);
         _todoListObjects.Add(itemObject);
         TodoListObject temp = itemObject;
-        itemObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckItem(temp); });
-
+        Toggle itemToggle = itemObject.GetComponent<Toggle>();
+        itemToggle.isOn = isChecked;
+        itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
+        
         _amountListObjects++;
         if (!isLoading)
         {
             SaveJSON();
             SwitchMode(0);
         }
+        else
+        {
+            itemObject.ChangeLineState();
+        }
     }
 
+    #region Change Item Status
     // Checks an item on the list. With that, it is deleted from the list.
     private void CheckItem(TodoListObject item)
+    {
+        if (item.isChecked)
+        {
+            UncheckItem(item);
+            return;
+        }
+
+        item.ChangeLineState(true);
+        SaveJSON();
+    }
+
+    private void UncheckItem(TodoListObject item)
+    {
+        item.ChangeLineState(false);
+        SaveJSON();
+    }
+
+    public void DeleteItem(TodoListObject item)
     {
         _todoListObjects.Remove(item);
         _amountListObjects--;
         SaveJSON();
         Destroy(item.gameObject);
     }
-
+    #endregion
     #region Input Fields
 
     // Initiates initial configurations for the input fields
@@ -147,7 +173,7 @@ public class TodoListManager : MonoBehaviour
                 if(content.Trim() != "")
                 {
                     TodoListItem temp = JsonUtility.FromJson<TodoListItem>(content);
-                    CreateTodoListItem(temp.objName, temp.topic, true);
+                    CreateTodoListItem(temp.objName, temp.topic, temp.isChecked, true);
                 }
             }
         }
