@@ -19,8 +19,9 @@ public class TodoListManager : Singleton<TodoListManager>
     
     string _filePath => Application.persistentDataPath + "/todolist.txt";
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _addInputFields = _addPanel.GetComponentsInChildren<TMP_InputField>();
         b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text); } );
         InitInputFields();

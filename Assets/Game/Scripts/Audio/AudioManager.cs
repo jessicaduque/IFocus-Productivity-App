@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using Utils.Singleton;
 
-public class AudioManager : Singleton<AudioManager>
+public class AudioManager : DontDestroySingleton<AudioManager>
 {
     [Header("Mixer")]
     [SerializeField] private AudioMixer masterMixer;

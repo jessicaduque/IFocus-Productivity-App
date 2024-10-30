@@ -7,7 +7,8 @@ public class ButtonExtra : MonoBehaviour
     private Button _thisButton;
 
     [SerializeField] private bool sensitiveToTransparency = true;
-    // _audioManager => AudioManager.I;
+    [SerializeField] private string soundEffectName = "buttonClick";
+    private AudioManager _audioManager => AudioManager.I;
 
     private void Awake()
     {
@@ -32,7 +33,7 @@ public class ButtonExtra : MonoBehaviour
 
     private void MakeSound()
     {
-        //_audioManager.PlaySfx("buttonclick");
+        _audioManager.PlaySfx(soundEffectName);
         _thisButton.interactable = false;
         if(isActiveAndEnabled) StartCoroutine(Reset());
     }        
