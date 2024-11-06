@@ -11,8 +11,8 @@ public class TimerGIGI : MonoBehaviour , IPointerClickHandler
     [SerializeField] private Image uiFill;
     [SerializeField] private TMP_Text uiText;
 
-    public float duration;
-    private float remainingDuration;
+    public int duration;
+    private int remainingDuration;
     private bool Pause;
 
     public void OnPointerClick(PointerEventData eventData)
@@ -25,7 +25,7 @@ public class TimerGIGI : MonoBehaviour , IPointerClickHandler
         Beging(duration);
     }
 
-    private void Beging (float second)
+    private void Beging (int second)
     {
         remainingDuration = second;
         StartCoroutine(UpdateTimer());
@@ -40,7 +40,8 @@ public class TimerGIGI : MonoBehaviour , IPointerClickHandler
             {
                 uiText.text = $"{remainingDuration / 60:00}:{remainingDuration % 60:00}";
                 uiFill.fillAmount = Mathf.InverseLerp(0, duration, remainingDuration);
-                remainingDuration -= Time.deltaTime;
+                remainingDuration -= 1;
+                yield return new WaitForSeconds(1f);
             }
             yield return null;
             
