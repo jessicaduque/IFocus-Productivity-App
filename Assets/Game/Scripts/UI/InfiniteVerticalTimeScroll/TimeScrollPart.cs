@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TimeScrollPart : MonoBehaviour
@@ -11,5 +10,7 @@ public class TimeScrollPart : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
         scrollRect.ScrollToCellWithinTime(0, 0.01f);
     }
+    
+    
 
 }
