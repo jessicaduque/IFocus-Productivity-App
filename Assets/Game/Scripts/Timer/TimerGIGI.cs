@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,52 +9,46 @@ public class TimerGIGI : MonoBehaviour , IPointerClickHandler
 
     [SerializeField] private Image uiFill;
     [SerializeField] private TMP_Text uiText;
-
-    public float duration;
-    private float remainingDuration;
-    private bool Pause;
+    [SerializeField] public float durationSeconds = 10;
+    private float _remainingDuration;
+    private bool _isPaused;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Pause = !Pause;
+        _isPaused = !_isPaused;
     }
 
     void Start()
     {
-        Beging(duration);
+        BeginTimer(durationSeconds);
     }
 
-    private void Beging (float second)
+    private void BeginTimer (float second)
     {
-        remainingDuration = second;
+        _remainingDuration = second;
         StartCoroutine(UpdateTimer());
     }
 
     private IEnumerator UpdateTimer()
     {
         
-        while (remainingDuration >= 0) 
+        while (_remainingDuration >= 0) 
         {
-            if (!Pause) 
+            if (!_isPaused) 
             {
-                uiText.text = $"{remainingDuration / 60:00}:{remainingDuration % 60:00}";
-                uiFill.fillAmount = Mathf.InverseLerp(0, duration, remainingDuration);
-                remainingDuration -= Time.deltaTime;
+                uiText.text = $"{_remainingDuration / 60:00}:{_remainingDuration % 60:00}";
+                uiFill.fillAmount = Mathf.InverseLerp(0, durationSeconds, _remainingDuration);
+                _remainingDuration -= Time.deltaTime;
             }
             yield return null;
             
         }
-        OnEnd();
+        TimerEnd();
     }
 
-    private void OnEnd()
+    private void TimerEnd()
     {
         Debug.Log("ACABOU");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
