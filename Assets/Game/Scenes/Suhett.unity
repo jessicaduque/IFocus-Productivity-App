@@ -1303,6 +1303,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VerticalScroll_Reverse
       objectReference: {fileID: 0}
+    - target: {fileID: 4490568846778448944, guid: 21782b0c2501c4d49933863fb55c643f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4539851560000176308, guid: 21782b0c2501c4d49933863fb55c643f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

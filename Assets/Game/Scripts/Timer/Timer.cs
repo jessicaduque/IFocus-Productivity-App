@@ -47,7 +47,8 @@ public class Timer : MonoBehaviour
     
     public void StartTimer()
     {
-        GameObject currentItem = scrollRect.GetCurrentItemGameObject();
+        //GameObject currentItem = scrollRect.GetCurrentItemGameObject();
+        GameObject currentItem = null;
         if (currentItem != null)
         {
             Debug.Log(currentItem.GetComponent<ScrollIndexCallbackTime>().GetFinalNumber());
