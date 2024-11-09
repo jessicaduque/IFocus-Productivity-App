@@ -11,21 +11,40 @@ public class TimerGIGI : MonoBehaviour , IPointerClickHandler
     [SerializeField] private TMP_Text uiText;
     [SerializeField] public float durationSeconds = 10;
     private float _remainingDuration;
-    private bool _isPaused;
+    private bool _isPaused = true;
 
     public void OnPointerClick(PointerEventData eventData)
     {
         _isPaused = !_isPaused;
     }
 
+    public void Pause()
+    {
+        if (_isPaused)
+        {
+            _isPaused = false;
+            //colocar a visibilidade da Runing
+            //tirar a vizibilidade do Paused
+        }
+        else 
+        { 
+            _isPaused = true;
+            //tirar a visibilidade da Runing
+            //colocar a vizibilidade do Paused
+        }
+    }
+
     void Start()
     {
         BeginTimer(durationSeconds);
+        //colocar a visibilidade da Runing
     }
 
     private void BeginTimer (float second)
     {
         _remainingDuration = second;
+        //pergunta para a Jess se posso ter duas corrotinas ou se nesse caso é melhor usar o Update (para o botão de pausar e run)
+        //ou, gambiarra, posso usar um contador ou algo que me indique que é a primeira vez que ele clicou e que é para iniciar o BeginTimer
         StartCoroutine(UpdateTimer());
     }
 
