@@ -1,9 +1,6 @@
-using System;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine.UI; 
-
 public class TodoListObject : MonoBehaviour
 {
     public string objName;

@@ -16,8 +16,8 @@ public class TodoListManager : Singleton<TodoListManager>
     List<TodoListObject> _todoListObjects = new List<TodoListObject>();
     int _characterLimit = 30;
     int _amountListObjects = 0;
-    
-    string _filePath => Application.persistentDataPath + "/todolist.txt";
+
+    private JSONManager _jsonManager => JSONManager.I;
 
     protected override void Awake()
     {
@@ -33,7 +33,7 @@ public class TodoListManager : Singleton<TodoListManager>
     }
     
     // Creates a new item to add to the to-do list
-    private void CreateTodoListItem(string name, string topic, bool isChecked=false, bool isLoading=false)
+    public void CreateTodoListItem(string name, string topic, bool isChecked=false, bool isLoading=false)
     {
         if (!isLoading && !AreInputFieldsFilledIn())
         {
@@ -149,51 +149,13 @@ public class TodoListManager : Singleton<TodoListManager>
     // Saves the to-do list data into a JSON file
     private void SaveJSON()
     {
-        string contents = "";
-        
-        for (int todoListObjectIndex = 0; todoListObjectIndex < _amountListObjects; todoListObjectIndex++)
-        {
-            TodoListItem temp = new TodoListItem(_todoListObjects[todoListObjectIndex].objName, _todoListObjects[todoListObjectIndex].topic, _todoListObjects[todoListObjectIndex].isChecked);
-            contents += JsonUtility.ToJson(temp) + "\n";
-        }
-
-        File.WriteAllText(_filePath, contents);
+        _jsonManager.SaveTodoList(_todoListObjects, _amountListObjects);
     }
     // Loads any data that has already been previously saved to the to-do list 
     private void LoadJSONData()
     {
-        if (File.Exists(_filePath))  
-        {
-            string contents = File.ReadAllText(_filePath);
-
-            string[] splitContents = contents.Split('\n');
-
-            _amountListObjects = 0; // Confirmar que o index comece como 0 antes de fazer load de dados
-            foreach (string content in splitContents)
-            {
-                if(content.Trim() != "")
-                {
-                    TodoListItem temp = JsonUtility.FromJson<TodoListItem>(content);
-                    CreateTodoListItem(temp.objName, temp.topic, temp.isChecked, true);
-                }
-            }
-        }
+        _jsonManager.LoadTodoList();
     }
 
     #endregion
-
-    // Public class inside class to help with serialization
-    public class TodoListItem
-    {
-        public string objName;
-        public string topic;
-        public bool isChecked;
-
-        public TodoListItem(string name, string topic, bool isChecked)
-        {
-            this.objName = name;
-            this.topic = topic;
-            this.isChecked = isChecked;
-        }
-    }
 }
