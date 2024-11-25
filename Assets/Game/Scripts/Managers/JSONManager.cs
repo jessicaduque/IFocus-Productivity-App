@@ -64,11 +64,15 @@ public class JSONManager : DontDestroySingleton<JSONManager>
     {
     }
     
-    public void SaveStudyTopicTime(string name, int amountListObjects)
+    public void SaveStudyTopicTime(string name, int timeSeconds)
     {
     }
     
-    public void ChangeStudyTopicName(string name, int amountListObjects)
+    public void ChangeStudyTopicName(string name)
+    {
+    }
+    
+    public void DeleteStudytopic(string name)
     {
     }
     

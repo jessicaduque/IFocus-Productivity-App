@@ -2,20 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.IO;
 using Utils.Singleton;
 
 public class TodoListManager : Singleton<TodoListManager>
 {
-    [SerializeField] Transform _content;
-    [SerializeField] GameObject _addPanel;
-    [SerializeField] Button b_create;
-    [SerializeField] GameObject _todoListItemPrefab;
-    [SerializeField] TMP_InputField[] _addInputFields;
+    [SerializeField] private Transform _content;
+    [SerializeField] private GameObject _addPanel;
+    [SerializeField] private Button b_create;
+    [SerializeField] private TextMeshProUGUI _amountItemsText;
+    [SerializeField] private GameObject _todoListItemPrefab;
+    [SerializeField] private TMP_InputField[] _addInputFields;
     
-    List<TodoListObject> _todoListObjects = new List<TodoListObject>();
-    int _characterLimit = 30;
-    int _amountListObjects = 0;
+    private List<TodoListObject> _todoListObjects = new List<TodoListObject>();
+    private int _characterLimitName = 30;
+    private int _maxAmountListObjects = 40;
+    private int _amountListObjects = 0;
 
     private JSONManager _jsonManager => JSONManager.I;
 
@@ -41,25 +42,37 @@ public class TodoListManager : Singleton<TodoListManager>
             return;
         }
 
-        GameObject item = Instantiate(_todoListItemPrefab, _content);
-        TodoListObject itemObject = item.GetComponent<TodoListObject>();
-        itemObject.SetObjectInfo(name, topic, isChecked);
-        _todoListObjects.Add(itemObject);
-        TodoListObject temp = itemObject;
-        Toggle itemToggle = itemObject.GetComponent<Toggle>();
-        itemToggle.isOn = isChecked;
-        itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
+        if (_amountListObjects < _maxAmountListObjects)
+        {
+            GameObject item = Instantiate(_todoListItemPrefab, _content);
+            TodoListObject itemObject = item.GetComponent<TodoListObject>();
+            itemObject.SetObjectInfo(name, topic, isChecked);
+            _todoListObjects.Add(itemObject);
+            TodoListObject temp = itemObject;
+            Toggle itemToggle = itemObject.GetComponent<Toggle>();
+            itemToggle.isOn = isChecked;
+            itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
         
-        _amountListObjects++;
-        if (!isLoading)
-        {
-            SaveJSON();
-            SwitchMode(0);
+            _amountListObjects++;
+            
+            if(_amountListObjects == 40)
+            {
+                b_create.interactable = false;
+            }
+            
+            _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
+                
+            if (!isLoading)
+            {
+                SaveJSON();
+                SwitchMode(0);
+            }
+            else
+            {
+                itemObject.ChangeLineState();
+            }
         }
-        else
-        {
-            itemObject.ChangeLineState();
-        }
+        
     }
 
     #region Change Item Status
@@ -85,7 +98,12 @@ public class TodoListManager : Singleton<TodoListManager>
     public void DeleteItem(TodoListObject item)
     {
         _todoListObjects.Remove(item);
+        if(_amountListObjects == _maxAmountListObjects)
+        {
+            b_create.interactable = true;
+        }
         _amountListObjects--;
+        _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
         SaveJSON();
         Destroy(item.gameObject);
     }
@@ -97,7 +115,7 @@ public class TodoListManager : Singleton<TodoListManager>
     {
         foreach (TMP_InputField inputField in _addInputFields)
         {
-            inputField.characterLimit = _characterLimit; // Sets the character limit for each input field
+            inputField.characterLimit = _characterLimitName; // Sets the character limit for each input field
         }
     }
 

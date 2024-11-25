@@ -23,7 +23,7 @@ public class ButtonExtra : MonoBehaviour
 
     private void OnEnable()
     {
-        _thisButton.interactable = true;
+        _thisButton.enabled = true;
     }
 
     private void OnDisable()
@@ -34,14 +34,14 @@ public class ButtonExtra : MonoBehaviour
     private void MakeSound()
     {
         _audioManager.PlaySfx(soundEffectName);
-        _thisButton.interactable = false;
+        _thisButton.enabled = false;
         if(isActiveAndEnabled) StartCoroutine(Reset());
     }        
 
     IEnumerator Reset()
     {
         yield return new WaitForSeconds(0.1f);
-        _thisButton.interactable = true;
+        _thisButton.enabled = true;
     }
 
 }
