@@ -1,18 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinimizedTimer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI _thisText;
+    [SerializeField] private Image _fillImage;
+    
+    private MaximizedTimer _maximizedTimer = MaximizedTimer.I;
+    private float _totalSeconds;
+    private void OnEnable()
     {
-        
+        SetTotalSeconds();
+        _maximizedTimer.endTimerAction += EndTimer;
     }
 
-    // Update is called once per frame
+    private void OnDisable()
+    {
+        _maximizedTimer.endTimerAction -= EndTimer;
+    }
+
+    private void EndTimer()
+    {
+        _thisText.text = "";
+        gameObject.SetActive(false);
+    }
+
+    private void SetTotalSeconds()
+    {
+        _totalSeconds = _maximizedTimer.GetTimerTotalSeconds();
+    }
+    
     void Update()
     {
-        
+        float secondsLeft = _maximizedTimer.GetTimerSecondsLeft();
+        int hours = (int) (secondsLeft / 3600);
+        int minutes = (int) ((secondsLeft - hours * 3600) / 60);
+        _thisText.text = $"{hours:0}:{minutes:00}";
+        _fillImage.fillAmount = Mathf.InverseLerp(0, _totalSeconds, secondsLeft);
     }
 }

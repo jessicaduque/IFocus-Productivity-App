@@ -1,7 +1,8 @@
 using UnityEngine.UI;
 using UnityEngine;
+using Utils.Singleton;
 
-public class TimerManager : MonoBehaviour
+public class TimerManager : Singleton<TimerManager>
 {
     [SerializeField] private Button b_closeGeneral;
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;

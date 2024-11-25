@@ -3,8 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
-public class MaximizedTimer : MonoBehaviour
+using Utils.Singleton;
+public class MaximizedTimer : Singleton<MaximizedTimer>
 {
     [Header("UI Components")]
     [SerializeField] private GameObject setTimerText;
@@ -187,5 +187,19 @@ public class MaximizedTimer : MonoBehaviour
         endTimerAction?.Invoke();
     }
 
+    #endregion
+    
+    #region Get
+
+    public float GetTimerTotalSeconds()
+    {
+        return _totalSeconds;
+    }
+    
+    public float GetTimerSecondsLeft()
+    {
+        return _secondsLeft;
+    }
+    
     #endregion
 }
