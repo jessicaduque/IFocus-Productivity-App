@@ -37,7 +37,7 @@ public class TodoListManager : Singleton<TodoListManager>
     // Creates a new item to add to the to-do list
     public void CreateTodoListItem(string name, string topic, bool isChecked=false, bool isLoading=false)
     {
-        if (!isLoading && !AreInputFieldsFilledIn())
+        if (!isLoading && !IsInputFieldFilled())
         {
             ShowInputFieldError();
             return;
@@ -109,7 +109,7 @@ public class TodoListManager : Singleton<TodoListManager>
         Destroy(item.gameObject);
     }
     #endregion
-    #region Input Fields
+    #region User Input Fields UI
 
     // Initiates initial configurations for the input field
     private void InitInputField()
@@ -123,7 +123,7 @@ public class TodoListManager : Singleton<TodoListManager>
     }
 
     // Checks if all the input fields have some form of text in them
-    private bool AreInputFieldsFilledIn()
+    private bool IsInputFieldFilled()
     {
         return _addInputField.text != "";
     }
