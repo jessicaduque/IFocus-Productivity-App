@@ -11,7 +11,8 @@ public class TodoListManager : Singleton<TodoListManager>
     [SerializeField] private Button b_create;
     [SerializeField] private TextMeshProUGUI _amountItemsText;
     [SerializeField] private GameObject _todoListItemPrefab;
-    [SerializeField] private TMP_InputField[] _addInputFields;
+    [SerializeField] private TMP_InputField _addInputField;
+    [SerializeField] private TMP_Dropdown _topicDropdown;
     
     private List<TodoListObject> _todoListObjects = new List<TodoListObject>();
     private int _characterLimitName = 30;
@@ -23,9 +24,9 @@ public class TodoListManager : Singleton<TodoListManager>
     protected override void Awake()
     {
         base.Awake();
-        _addInputFields = _addPanel.GetComponentsInChildren<TMP_InputField>();
-        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputFields[0].text, _addInputFields[1].text); } );
-        InitInputFields();
+        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputField.text, _topicDropdown.captionText.text); } );
+        InitInputField();
+        InitDropdown();
     }
 
     private void Start()
@@ -110,34 +111,34 @@ public class TodoListManager : Singleton<TodoListManager>
     #endregion
     #region Input Fields
 
-    // Initiates initial configurations for the input fields
-    private void InitInputFields()
+    // Initiates initial configurations for the input field
+    private void InitInputField()
     {
-        foreach (TMP_InputField inputField in _addInputFields)
-        {
-            inputField.characterLimit = _characterLimitName; // Sets the character limit for each input field
-        }
+        _addInputField.characterLimit = _characterLimitName; // Sets the character limit input field
+    }
+    // Initiates initial configurations for the dropdown
+    private void InitDropdown()
+    {
+        //_addInputField.characterLimit = _characterLimitName; // Sets all options in the dropdown
     }
 
     // Checks if all the input fields have some form of text in them
     private bool AreInputFieldsFilledIn()
     {
-        foreach (TMP_InputField inputField in _addInputFields)
-        {
-            if (inputField.text == "") return false;
-        }
-
-        return true;
+        return _addInputField.text != "";
     }
 
     // Clears the text present on the input fields
-    private void ClearInputFields()
+    private void ClearInputField()
     {
-        foreach (TMP_InputField inputField in _addInputFields)
-        {
-            inputField.text = "";
-        }
+        _addInputField.text = "";
     }
+    // Resets the dropdown to its default option
+    private void ResetDropdown()
+    {
+        //_addInputField.text = "";
+    }
+    
     // Shows a visual error to the player if any of the input fields hasn't been filled in
     private void ShowInputFieldError()
     {
@@ -153,7 +154,8 @@ public class TodoListManager : Singleton<TodoListManager>
             // To-do list normal show mode
             case 0:
                 _addPanel.SetActive(false);
-                ClearInputFields();
+                ClearInputField();
+                ResetDropdown();
                 break;
             // To-do list adding item mode
             case 1:

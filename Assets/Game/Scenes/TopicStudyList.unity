@@ -1885,9 +1885,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _content: {fileID: 434594416}
-  _addInputField: {fileID: 0}
+  _addInputField: {fileID: 1881637403}
   b_create: {fileID: 184405798}
-  _studyTopicPrefab: {fileID: 0}
+  _studyTopicPrefab: {fileID: 5129943196393981077, guid: 7c8f397af87efcf4e9a18bda0b17b88f, type: 3}
 --- !u!1 &1881637401
 GameObject:
   m_ObjectHideFlags: 0
