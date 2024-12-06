@@ -125,6 +125,8 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
         hoursText.text = "0";
         minutesText.text = "00";
         secondsText.text = "00";
+
+        uiFill.fillAmount = 1;
         
         hoursInputField.gameObject.SetActive(true);
         minutesInputField.gameObject.SetActive(true);
