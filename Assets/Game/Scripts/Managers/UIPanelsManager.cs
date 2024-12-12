@@ -4,12 +4,16 @@ using UnityEngine.Events;
 
 public class UIPanelsManager : Singleton<UIPanelsManager>
 {
+    [Header("UI Main Panels")]
     [SerializeField] private GameObject alarmPanel;
     [SerializeField] private GameObject computerScreenPanel;
     [SerializeField] private GameObject todoListPanel;
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
     [SerializeField] private GameObject musicPanel;
+    
+    [Header("UI Warning Panels")]
+    [SerializeField] private GameObject deleteTopicWarningPanel;
     
     public UnityAction backToMainPanel, alarmPanelActivated, computerScreenPanelActivated, todoListPanelActivated, 
         studyTopicsPanelActivated, statisticsPanelActivated, musicPanelActivated;
@@ -89,5 +93,14 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
             musicPanel.SetActive(false);
         }
     }
+    #endregion
+    
+    #region Warning Panel Controls
+
+    public void ControlDeleteTopicWarningPanel(bool activate)
+    {
+        deleteTopicWarningPanel?.SetActive(activate);
+    }
+    
     #endregion
 }

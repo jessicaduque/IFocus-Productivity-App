@@ -18,6 +18,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     private int _amountTopicsObjects = 0;
     
     private JSONManager _jsonManager => JSONManager.I;
+    private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
     
     protected override void Awake()
     {
@@ -32,7 +33,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     }
     
     // Creates a new item to add to the study topics
-    public void CreateStudyTopicItem(string name, bool isLoading=false)
+    public void CreateStudyTopicItem(string name, bool isLoading=false, bool isDefault=false)
     {
         if (!isLoading && !IsInputFieldFilled())
         {
@@ -40,15 +41,34 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
             return;
         }
 
+        foreach (string nameItem in _listItems)
+        {
+            if (nameItem == name)
+            {
+                ShowNameAlreadyExistentError();
+                return;
+            }
+        }
+
         if (_amountTopicsObjects < _maxAmountTopicsObjects)
         {
-            GameObject item = Instantiate(_studyTopicPrefab, _content);
             _listItems.Add(name);
-            ////// PARA ADICIONAR PARTE DE EDITAR NOME
-            // Toggle itemToggle = itemObject.GetComponent<Toggle>();
-            // itemToggle.isOn = isChecked;
-            // itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
-        
+            GameObject item;
+            if (isDefault)
+            {
+                item = _content.GetChild(0).gameObject;
+            }
+            else
+            {
+                item = Instantiate(_studyTopicPrefab, _content);
+            }
+            StudyTopic studyTopic = item.GetComponent<StudyTopic>();
+            TMP_InputField inputField = studyTopic.GetInputField();
+            studyTopic.SetObjectInfo(name, isDefault);
+            studyTopic.GetEditButton().onClick.AddListener(inputField.ActivateInputField);
+            inputField.onEndEdit.AddListener(delegate { EditStudyTopic(name); });
+            studyTopic.GetDeleteButton().onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true); });
+            
             _amountTopicsObjects++;
             
             if(_amountTopicsObjects == _maxAmountTopicsObjects)
@@ -64,8 +84,18 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
                 ClearInputField();
             }
         }
+        else
+        {
+            // Código para sinalizar ao usuário que a lista já está cheia!
+        }
         
     }
+
+    private void EditStudyTopic(string name)
+    {
+        
+    }
+    
     #region User Input Fields UI
 
     // Initiates initial configurations for the input field
@@ -90,6 +120,11 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     private void ShowInputFieldError()
     {
         // Codigo para mostrar erro criacao
+    }
+    // Shows a visual error to the player if the topic name already exists
+    private void ShowNameAlreadyExistentError()
+    {
+        // Codigo para mostrar erro nome
     }
 
     #endregion
