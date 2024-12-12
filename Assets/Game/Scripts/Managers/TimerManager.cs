@@ -1,24 +1,76 @@
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine;
-using Utils.Singleton;
+using UnityEngine.Events;
 
-public class TimerManager : Singleton<TimerManager>
+public class TimerManager : Utils.Singleton.Singleton<TimerManager>
 {
-    [SerializeField] private Button b_closeGeneral;
-    private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
+    private float _totalSeconds;
+    private float _secondsLeft;
+    
+    public TIMER_STATE timerState = TIMER_STATE.TIMER_OFF;
+    public UnityAction endTimerAction;
 
-    private void Awake()
+    [SerializeField] private GameObject minimizedTimer;
+
+    #region Timer Control
+
+    private IEnumerator UpdateTimer()
     {
-        SetupButtons();
+        while (_secondsLeft >= 0) 
+        {
+            _secondsLeft -= Time.deltaTime;
+            yield return null;
+        }
+        
+        SetTimerState(TIMER_STATE.TIMER_OFF);
+        endTimerAction?.Invoke();
     }
 
-    private void SetupButtons()
+    #endregion
+    
+    #region Set
+    public void SetTotalSeconds(float totalSeconds)
     {
-        b_closeGeneral.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); ControlStateButtons(false); });
+        _totalSeconds = totalSeconds;
+        _secondsLeft = totalSeconds;
     }
 
-    private void ControlStateButtons(bool activated)
+    public void SetTimerState(TIMER_STATE newState)
     {
-        b_closeGeneral.interactable = activated;
+        timerState = newState;
+
+        switch (newState)
+        {
+            case TIMER_STATE.TIMER_ON:
+                StartCoroutine(UpdateTimer());
+                minimizedTimer.SetActive(true);
+                break;
+            case TIMER_STATE.TIMER_OFF:
+                minimizedTimer.SetActive(false);
+                StopAllCoroutines();
+                break;
+            case TIMER_STATE.TIMER_PAUSED:
+                StopAllCoroutines();
+                break;
+        }
     }
+    
+    #endregion
+    #region Get
+    public float GetSecondsLeft()
+    {
+        return _secondsLeft;
+    }
+    public float GetTotalSeconds()
+    {
+        return _totalSeconds;
+    }
+    public TIMER_STATE GetTimerState()
+    {
+        return timerState;
+    }
+    #endregion
 }

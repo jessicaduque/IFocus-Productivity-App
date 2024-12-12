@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +14,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button resumeButton;
+    [SerializeField] private Button generalLeaveButton;
     [Header("Input Fields")] 
     [SerializeField] private TMP_InputField hoursInputField;
     [SerializeField] private TMP_InputField minutesInputField;
@@ -22,32 +23,49 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
     [SerializeField] private TextMeshProUGUI hoursText;
     [SerializeField] private TextMeshProUGUI minutesText;
     [SerializeField] private TextMeshProUGUI secondsText;
-        
-    private float _totalSeconds;
-    private float _secondsLeft;
 
-    public UnityAction playTimerAction, resumeTimerAction, pauseTimerAction, quitTimerAction, endTimerAction;
+    private float totalSeconds;
+    
+    public UnityAction playTimerAction, resumeTimerAction, pauseTimerAction, quitTimerAction;
+    private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
+    private TimerManager _timerManager => TimerManager.I;
+    
 
-    private void Awake()
+    private new void Awake()
     {
         SetupButtons();
     }
 
+    private void OnEnable()
+    {
+        _timerManager.endTimerAction += InitialUI;
+        
+        if(_timerManager.GetTimerState() == TIMER_STATE.TIMER_OFF)
+            InitialUI();
+    }
+
+    private void OnDisable()
+    {
+        _timerManager.endTimerAction -= InitialUI;
+    }
+
     private void SetTotalSeconds()
     {
-        _totalSeconds = 0;
+        totalSeconds = 0;
+        _timerManager.SetTotalSeconds(totalSeconds);
         
         if(hoursInputField.text != "" && hoursInputField.text != " ")
-            _totalSeconds += int.Parse(hoursInputField.text) * 3600;
+            totalSeconds += int.Parse(hoursInputField.text) * 3600;
         
         if(minutesInputField.text != "" && minutesInputField.text != " ")
-            _totalSeconds += int.Parse(minutesInputField.text) * 60;
+            totalSeconds += int.Parse(minutesInputField.text) * 60;
         
         if(secondsInputField.text != "" && secondsInputField.text != " ")
-            _totalSeconds += int.Parse(secondsInputField.text);
+            totalSeconds += int.Parse(secondsInputField.text);
         
-        _totalSeconds += 1;
-        _secondsLeft = _totalSeconds;
+        totalSeconds += 1;
+        
+        _timerManager.SetTotalSeconds(totalSeconds);
     }
 
     private void SetupButtons()
@@ -56,6 +74,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
         pauseButton.onClick.AddListener(Pause);
         resumeButton.onClick.AddListener(Resume);
         quitButton.onClick.AddListener(Quit);
+        generalLeaveButton.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); ControlStateButtons(true); });
     }
     
     #region Unity Callbacks
@@ -63,34 +82,30 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
     private void Play()
     {
         SetTotalSeconds();
-        if (_totalSeconds == 1)
+        if (_timerManager.GetTotalSeconds() == 1)
             return;
         
-        BeginTimer(_totalSeconds);
+        _timerManager.SetTimerState(TIMER_STATE.TIMER_ON);
         PlayUI();
-        playTimerAction?.Invoke();
         
     }
 
     private void Pause()
     {
-        StopTimer();
+        _timerManager.SetTimerState(TIMER_STATE.TIMER_PAUSED);
         PauseUI();
-        pauseTimerAction?.Invoke();
     }
 
     private void Resume()
     {
-        ResumeTimer();
+        _timerManager.SetTimerState(TIMER_STATE.TIMER_ON);
         ResumeUI();
-        resumeTimerAction?.Invoke();
     }
     
     private void Quit()
     {
-        StopTimer();
-        QuitUI();
-        quitTimerAction?.Invoke();
+        _timerManager.SetTimerState(TIMER_STATE.TIMER_OFF);
+        InitialUI();
     }
     
     #endregion
@@ -120,7 +135,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
         resumeButton.gameObject.SetActive(true);
     }
 
-    private void QuitUI()
+    private void InitialUI()
     {
         hoursText.text = "0";
         minutesText.text = "00";
@@ -146,62 +161,41 @@ public class MaximizedTimer : Singleton<MaximizedTimer>
         pauseButton.gameObject.SetActive(true);
     }
     
+    private void ControlStateButtons(bool activated)
+    {
+        generalLeaveButton.interactable = activated;
+        playButton.interactable = activated;
+        pauseButton.interactable = activated;
+        quitButton.interactable = activated;
+        resumeButton.interactable = activated;
+    }
+    
     #endregion
     
     #region Timer Control
-    private void BeginTimer (float seconds)
-    {
-        _secondsLeft = seconds;
-        StartCoroutine(UpdateTimer());
-    }
 
-    private IEnumerator UpdateTimer()
+    private void Update()
     {
-        while (_secondsLeft >= 0) 
+        if (_timerManager.GetTimerState() == TIMER_STATE.TIMER_ON)
         {
-            int hours = (int) (_secondsLeft / 3600);
-            int minutes = (int) ((_secondsLeft - hours * 3600) / 60);
-            int seconds = (int) (_secondsLeft % 60);
+            float secondsLeft = _timerManager.GetSecondsLeft();
+            if(secondsLeft < 0) secondsLeft = 0;
+            int hours = (int) (secondsLeft / 3600);
+            int minutes = (int) ((secondsLeft - hours * 3600) / 60);
+            int seconds = (int) (secondsLeft % 60);
             hoursText.text = $"{hours:0}";
             minutesText.text = $"{minutes:00}";
             secondsText.text = $"{seconds:00}";
-            uiFill.fillAmount = Mathf.InverseLerp(0, _totalSeconds, _secondsLeft);
-            _secondsLeft -= Time.deltaTime;
-            yield return null;
+            uiFill.fillAmount = Mathf.InverseLerp(0, totalSeconds, secondsLeft);
         }
-        
-        EndTimer();
     }
 
     private void ResumeTimer()
     {
-        BeginTimer(_secondsLeft);
-    }
-
-    private void StopTimer()
-    {
-        StopAllCoroutines();
+        _timerManager.SetTimerState(TIMER_STATE.TIMER_ON);
     }
     
-    private void EndTimer()
-    {
-        QuitUI();
-        endTimerAction?.Invoke();
-    }
 
     #endregion
     
-    #region Get
-
-    public float GetTimerTotalSeconds()
-    {
-        return _totalSeconds;
-    }
-    
-    public float GetTimerSecondsLeft()
-    {
-        return _secondsLeft;
-    }
-    
-    #endregion
 }
