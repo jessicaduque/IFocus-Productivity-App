@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using Utils.Singleton;
 
-public class StudyTopicsManager : Singleton<StudyTopicsManager>
+public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
 {
     [SerializeField] Transform _content;
     [SerializeField] TMP_InputField _addInputField;
@@ -12,7 +12,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     [SerializeField] Button b_create;
     [SerializeField] GameObject _studyTopicPrefab;
     
-    private List<string> _listItems = new List<string>();
+    private List<StudyTopic> _listItems = new List<StudyTopic>();
     private int _characterLimitName = 30;
     private int _maxAmountTopicsObjects = 40;
     private int _amountTopicsObjects = 0;
@@ -33,7 +33,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     }
     
     // Creates a new item to add to the study topics
-    public void CreateStudyTopicItem(string name, bool isLoading=false, bool isDefault=false)
+    public void CreateStudyTopicItem(string topicName, bool isLoading=false, bool isDefault=false)
     {
         if (!isLoading && !IsInputFieldFilled())
         {
@@ -41,18 +41,14 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
             return;
         }
 
-        foreach (string nameItem in _listItems)
+        if (TopicNameAlreadyExists(topicName))
         {
-            if (nameItem == name)
-            {
-                ShowNameAlreadyExistentError();
-                return;
-            }
+            ShowNameAlreadyExistentError();
+            return;
         }
 
         if (_amountTopicsObjects < _maxAmountTopicsObjects)
         {
-            _listItems.Add(name);
             GameObject item;
             if (isDefault)
             {
@@ -63,11 +59,16 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
                 item = Instantiate(_studyTopicPrefab, _content);
             }
             StudyTopic studyTopic = item.GetComponent<StudyTopic>();
+            _listItems.Add(studyTopic);
             TMP_InputField inputField = studyTopic.GetInputField();
-            studyTopic.SetObjectInfo(name, isDefault);
-            studyTopic.GetEditButton().onClick.AddListener(inputField.ActivateInputField);
-            inputField.onEndEdit.AddListener(delegate { EditStudyTopic(name); });
-            studyTopic.GetDeleteButton().onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true); });
+            studyTopic.SetObjectInfo(topicName, isDefault);
+            studyTopic.GetEditButton().onClick.AddListener(() =>
+            {
+                inputField.interactable = true;
+                inputField.ActivateInputField();
+            });
+            inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(topicName, inputField); });
+            studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, topicName); });
             
             _amountTopicsObjects++;
             
@@ -80,7 +81,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
                 
             if (!isLoading)
             {
-                SaveJSON(name);
+                SaveJSON();
                 ClearInputField();
             }
         }
@@ -91,9 +92,55 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
         
     }
 
-    private void EditStudyTopic(string name)
+    private void CheckAndEditStudyTopic(string originalName, TMP_InputField inputField)
     {
+        string newName = inputField.text;
+        if (TopicNameAlreadyExists(newName) ||newName.Length == 0 || newName.Length > _characterLimitName)
+        {
+            inputField.text = originalName;
+            inputField.interactable = false;
+            return;
+        }
+
+        foreach (StudyTopic topic in _listItems)
+        {
+            if (topic.objName == originalName)
+            {
+                _jsonManager.ChangeStudyTopicName(topic.objName, newName);
+                topic.objName = newName;
+            }
+        }
         
+        inputField.interactable = false;
+    }
+
+
+    public void DeleteTopic(string topicName)
+    {
+        foreach (StudyTopic topic in _listItems)
+        {
+            if (topic.objName == topicName)
+            {
+                _jsonManager.DeleteStudytopic(topicName);
+                _listItems.Remove(topic);
+                Destroy(topic.gameObject);
+                return;
+            }
+        }
+    }
+    
+    private bool TopicNameAlreadyExists(string newName)
+    {
+        foreach (StudyTopic topic in _listItems)
+        {
+            if (topic.objName == newName)
+            {
+                ShowNameAlreadyExistentError();
+                return true;
+            }
+        }
+
+        return false;
     }
     
     #region User Input Fields UI
@@ -132,9 +179,9 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     #region JSON Data
 
     // Saves a study topic data into a JSON file
-    private void SaveJSON(string topicName)
+    private void SaveJSON()
     {
-        _jsonManager.SaveStudyTopics(topicName, _amountTopicsObjects);
+        _jsonManager.SaveStudyTopics(_listItems, _amountTopicsObjects);
     }
     // Loads any data that has already been previously saved to the to-do list 
     private void LoadJSONData()

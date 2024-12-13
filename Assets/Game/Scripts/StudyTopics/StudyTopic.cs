@@ -8,8 +8,8 @@ public class StudyTopic : MonoBehaviour
     [SerializeField] private Button b_delete;
     [SerializeField] private Button b_edit;
 
-    private string objName;
-    [SerializeField] bool isDefault;    
+    public string objName;
+    public bool isDefault;    
     public void SetObjectInfo(string name, bool isDefault)
     {
         this.objName = name;

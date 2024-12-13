@@ -97,9 +97,11 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     
     #region Warning Panel Controls
 
-    public void ControlDeleteTopicWarningPanel(bool activate)
+    public void ControlDeleteTopicWarningPanel(bool activate, string deleteName="")
     {
         deleteTopicWarningPanel?.SetActive(activate);
+        deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>().SetDeleteTopicName(deleteName);
+
     }
     
     #endregion
