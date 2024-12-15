@@ -10,10 +10,11 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
     [SerializeField] TMP_InputField _addInputField;
     [SerializeField] private TextMeshProUGUI _amountItemsText;
     [SerializeField] Button b_create;
+    [SerializeField] Button b_close;
     [SerializeField] GameObject _studyTopicPrefab;
     
     private List<StudyTopic> _listItems = new List<StudyTopic>();
-    private int _characterLimitName = 30;
+    private int _characterLimitName = 20;
     private int _maxAmountTopicsObjects = 40;
     private int _amountTopicsObjects = 0;
     
@@ -24,6 +25,7 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
     {
         base.Awake();
         b_create.onClick.AddListener(delegate { CreateStudyTopicItem(_addInputField.text); } );
+        b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlStudyTopicsPanel(false);});
         InitInputField();
     }
 
@@ -61,6 +63,8 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
             StudyTopic studyTopic = item.GetComponent<StudyTopic>();
             _listItems.Add(studyTopic);
             TMP_InputField inputField = studyTopic.GetInputField();
+            inputField.characterLimit = _characterLimitName;
+            inputField.text = topicName;
             studyTopic.SetObjectInfo(topicName, isDefault);
             studyTopic.GetEditButton().onClick.AddListener(() =>
             {
@@ -68,7 +72,7 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
                 inputField.ActivateInputField();
             });
             inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(topicName, inputField); });
-            studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, topicName); });
+            studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, inputField.text); });
             
             _amountTopicsObjects++;
             
@@ -110,7 +114,8 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
                 topic.objName = newName;
             }
         }
-        
+        inputField.onEndEdit.RemoveAllListeners();
+        inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(newName, inputField); });
         inputField.interactable = false;
     }
 
@@ -124,6 +129,8 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
                 _jsonManager.DeleteStudytopic(topicName);
                 _listItems.Remove(topic);
                 Destroy(topic.gameObject);
+                _amountTopicsObjects--;
+                _amountItemsText.text = _amountTopicsObjects.ToString() + "/" + _maxAmountTopicsObjects.ToString();
                 return;
             }
         }

@@ -1,20 +1,8 @@
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-
-public class TextMatchInputField : MonoBehaviour
+public class TextMatchInputFieldTimer : TextMatchInputField
 {
-    private TextMeshProUGUI thisText;
-    
-    [SerializeField] TMP_InputField thisInputField;
     [SerializeField] private bool isHours;
-    private void Awake()
-    {
-        thisText = GetComponent<TextMeshProUGUI>();
-        thisInputField.onValueChanged.AddListener(ControlInput);
-    }
-
-    private void ControlInput(string text)
+    protected override void ControlInput(string text)
     {
         if (isHours)
         {
@@ -50,7 +38,7 @@ public class TextMatchInputField : MonoBehaviour
         MatchTexts(thisInputField.text);
     }
 
-    private void MatchTexts(string text)
+    protected override void MatchTexts(string text)
     {
         int time = (text != "" ? int.Parse(text) : 0);
         thisText.text = (isHours ? $"{time:0}" : $"{time:00}");
