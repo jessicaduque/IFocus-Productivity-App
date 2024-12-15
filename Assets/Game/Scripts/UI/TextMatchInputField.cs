@@ -12,12 +12,7 @@ public abstract class TextMatchInputField : MonoBehaviour
         thisText = GetComponent<TextMeshProUGUI>();
         thisInputField.onValueChanged.AddListener(ControlInput);
     }
-
-    private void Start()
-    {
-        thisText.text = thisInputField.text;
-    }
-
+    
     protected virtual void ControlInput(string text)
     {
     }

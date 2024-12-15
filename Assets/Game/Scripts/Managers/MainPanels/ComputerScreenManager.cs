@@ -12,11 +12,11 @@ public class ComputerScreenManager : MonoBehaviour
 
     private void SetupButtons()
     {
-        b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlComputerScreenPanel(false); ControlStateButtons(false); });
-        b_todoList.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(true); ControlStateButtons(false);});
-        b_studyTopics.onClick.AddListener(delegate { _uiPanelsManager.ControlStudyTopicsPanel(true); ControlStateButtons(false);});
-        b_statistics.onClick.AddListener(delegate { _uiPanelsManager.ControlStatisticsPanel(true); ControlStateButtons(false);});
-        b_music.onClick.AddListener(delegate { _uiPanelsManager.ControlMusicPanel(true); ControlStateButtons(false);});
+        b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlComputerScreenPanel(false);  });
+        b_todoList.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(true); });
+        b_studyTopics.onClick.AddListener(delegate { _uiPanelsManager.ControlStudyTopicsPanel(true); });
+        b_statistics.onClick.AddListener(delegate { _uiPanelsManager.ControlStatisticsPanel(true); });
+        b_music.onClick.AddListener(delegate { _uiPanelsManager.ControlMusicPanel(true); });
     }
 
     private void ControlStateButtons(bool activated)

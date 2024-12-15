@@ -8,7 +8,10 @@ public class TodoListManager : Singleton<TodoListManager>
 {
     [SerializeField] private Transform _content;
     [SerializeField] private GameObject _addPanel;
-    [SerializeField] private Button b_create;
+    [SerializeField] private Button b_addPanelOpen;
+    [SerializeField] private Button b_addPanelClose;
+    [SerializeField] private Button b_createItem;
+    [SerializeField] private Button b_close;
     [SerializeField] private TextMeshProUGUI _amountItemsText;
     [SerializeField] private GameObject _todoListItemPrefab;
     [SerializeField] private TMP_InputField _addInputField;
@@ -20,11 +23,15 @@ public class TodoListManager : Singleton<TodoListManager>
     private int _amountListObjects = 0;
 
     private JSONManager _jsonManager => JSONManager.I;
+    private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
 
     protected override void Awake()
     {
         base.Awake();
-        b_create.onClick.AddListener(delegate { CreateTodoListItem(_addInputField.text, _topicDropdown.captionText.text); } );
+        b_createItem.onClick.AddListener(delegate { CreateTodoListItem(_addInputField.text, _topicDropdown.captionText.text); } );
+        b_addPanelOpen.onClick.AddListener(delegate { SwitchMode(1); } );
+        b_addPanelClose.onClick.AddListener(delegate { SwitchMode(0); } );
+        b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(false); } );
         InitInputField();
         InitDropdown();
     }
@@ -58,7 +65,7 @@ public class TodoListManager : Singleton<TodoListManager>
             
             if(_amountListObjects == 40)
             {
-                b_create.interactable = false;
+                b_createItem.interactable = false;
             }
             
             _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
@@ -101,7 +108,7 @@ public class TodoListManager : Singleton<TodoListManager>
         _todoListObjects.Remove(item);
         if(_amountListObjects == _maxAmountListObjects)
         {
-            b_create.interactable = true;
+            b_createItem.interactable = true;
         }
         _amountListObjects--;
         _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
