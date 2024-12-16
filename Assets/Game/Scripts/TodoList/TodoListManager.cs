@@ -23,6 +23,7 @@ public class TodoListManager : Singleton<TodoListManager>
     private int _amountListObjects = 0;
 
     private JSONManager _jsonManager => JSONManager.I;
+    private StudyTopicsManager _studyTopicsManager => StudyTopicsManager.I; 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
 
     protected override void Awake()
@@ -33,7 +34,6 @@ public class TodoListManager : Singleton<TodoListManager>
         b_addPanelClose.onClick.AddListener(delegate { SwitchMode(0); } );
         b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(false); } );
         InitInputField();
-        InitDropdown();
     }
 
     private void Start()
@@ -124,9 +124,16 @@ public class TodoListManager : Singleton<TodoListManager>
         _addInputField.characterLimit = _characterLimitName; // Sets the character limit input field
     }
     // Initiates initial configurations for the dropdown
-    private void InitDropdown()
+    public void ConfigureDropdown()
     {
-        //_addInputField.characterLimit = _characterLimitName; // Sets all options in the dropdown
+        List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
+        
+        foreach (StudyTopic topic in _studyTopicsManager.GetStudyTopics())
+        {
+            options.Add(new TMP_Dropdown.OptionData(topic.GetObjName()));
+        }
+
+        _topicDropdown.options = options;
     }
 
     // Checks if all the input fields have some form of text in them
@@ -141,10 +148,6 @@ public class TodoListManager : Singleton<TodoListManager>
         _addInputField.text = "";
     }
     // Resets the dropdown to its default option
-    private void ResetDropdown()
-    {
-        //_addInputField.text = "";
-    }
     
     // Shows a visual error to the player if any of the input fields hasn't been filled in
     private void ShowInputFieldError()
@@ -161,11 +164,11 @@ public class TodoListManager : Singleton<TodoListManager>
             // To-do list normal show mode
             case 0:
                 _addPanel.SetActive(false);
-                ClearInputField();
-                ResetDropdown();
                 break;
             // To-do list adding item mode
             case 1:
+                ConfigureDropdown();
+                ClearInputField();
                 _addPanel.SetActive(true);
                 break;
         }

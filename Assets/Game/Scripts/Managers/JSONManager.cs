@@ -84,7 +84,7 @@ public class JSONManager : DontDestroySingleton<JSONManager>
         
         for (int amountListObjectsIndex = 0; amountListObjectsIndex < amountListObjects; amountListObjectsIndex++)
         {
-            StudyTopicItem item = new StudyTopicItem(topics[amountListObjectsIndex].objName, topics[amountListObjectsIndex].isDefault);
+            StudyTopicItem item = new StudyTopicItem(topics[amountListObjectsIndex].GetObjName(), topics[amountListObjectsIndex].GetIsDefault());
             contents += JsonUtility.ToJson(item) + "\n";
         }
 

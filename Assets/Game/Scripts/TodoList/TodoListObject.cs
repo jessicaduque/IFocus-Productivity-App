@@ -10,8 +10,10 @@ public class TodoListObject : MonoBehaviour
     [SerializeField] Image im_line;
     [SerializeField] TextMeshProUGUI t_item;
     [SerializeField] private Button b_delete;
-    private TodoListManager _todoListManager => TodoListManager.I;
 
+    private StudyTopic _thisStudyTopic;
+    private TodoListManager _todoListManager => TodoListManager.I;
+    private StudyTopicsManager _studyTopicsManager => StudyTopicsManager.I; 
     private void Awake()
     {
         b_delete.onClick.AddListener(delegate { _todoListManager.DeleteItem(this); });
@@ -34,13 +36,21 @@ public class TodoListObject : MonoBehaviour
         ChangeLineState(isChecked);
     }
 
-    public void SetObjectInfo(string name, string type, bool isChecked)
+    public void SetObjectInfo(string objName, string type, bool isChecked)
     {
-        this.objName = name;
+        this.objName = objName;
         this.topic = type;
         this.isChecked = isChecked;
-
+        this._thisStudyTopic = _studyTopicsManager.GetSpecificStudyTopic(type);
+        this._thisStudyTopic.nameAlteredAction += SetType;
+        
         t_item.text = objName;
         im_line.gameObject.SetActive(true);
+    }
+
+    private void SetType(string newTypeName)
+    {
+        this.topic = newTypeName;
+        
     }
 }

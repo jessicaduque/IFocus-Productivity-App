@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
+using Utils.Singleton;
+public class StudyTopicsManager : Singleton<StudyTopicsManager>
 {
     [SerializeField] Transform _content;
     [SerializeField] TMP_InputField _addInputField;
@@ -71,8 +70,8 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
                 inputField.interactable = true;
                 inputField.ActivateInputField();
             });
-            inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(topicName, inputField); });
-            studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, inputField.text); });
+            inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(studyTopic.GetObjName(), inputField); });
+            studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, studyTopic.GetObjName()); });
             
             _amountTopicsObjects++;
             
@@ -108,14 +107,13 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
 
         foreach (StudyTopic topic in _listItems)
         {
-            if (topic.objName == originalName)
+            if (topic.GetObjName() == originalName)
             {
-                _jsonManager.ChangeStudyTopicName(topic.objName, newName);
-                topic.objName = newName;
+                _jsonManager.ChangeStudyTopicName(topic.GetObjName(), newName);
+                topic.SetObjName(newName);
             }
         }
-        inputField.onEndEdit.RemoveAllListeners();
-        inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(newName, inputField); });
+        
         inputField.interactable = false;
     }
 
@@ -124,7 +122,7 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
     {
         foreach (StudyTopic topic in _listItems)
         {
-            if (topic.objName == topicName)
+            if (topic.GetObjName() == topicName)
             {
                 _jsonManager.DeleteStudytopic(topicName);
                 _listItems.Remove(topic);
@@ -140,7 +138,7 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
     {
         foreach (StudyTopic topic in _listItems)
         {
-            if (topic.objName == newName)
+            if (topic.GetObjName() == newName)
             {
                 ShowNameAlreadyExistentError();
                 return true;
@@ -196,5 +194,27 @@ public class StudyTopicsManager : Utils.Singleton.Singleton<StudyTopicsManager>
         _jsonManager.LoadStudyTopics();
     }
 
+    #endregion
+    
+    #region Get
+
+    public StudyTopic[] GetStudyTopics()
+    {
+        return _listItems.ToArray();
+    }
+
+    public StudyTopic GetSpecificStudyTopic(string topicName)
+    {
+        foreach (StudyTopic studyTopic in _listItems)
+        {
+            if (studyTopic.GetObjName() == topicName)
+            {
+                return studyTopic;
+            }
+        }
+
+        return null;
+    }
+    
     #endregion
 }
