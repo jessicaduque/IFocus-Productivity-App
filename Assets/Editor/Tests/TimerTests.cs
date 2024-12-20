@@ -20,7 +20,7 @@ public class TimerTests
         // Arrange
         _timerManager.SetTotalSeconds(1500); // 25 minutos
         _timerManager.SetTimerState(TIMER_STATE.TIMER_ON);
-        _timerManager.SimulateOnApplicationPause(true); // Simula saída do app
+        _timerManager.ApplicationPause(true); // Simula saída do app
 
         DateTime fakeReturnTime = DateTime.Now;
 
@@ -28,7 +28,7 @@ public class TimerTests
         DateTime fakeExitTime = fakeReturnTime.AddMinutes(-5);
         var elapsed = fakeReturnTime - fakeExitTime;
         PlayerPrefs.SetString("DatetimeExit", fakeExitTime.ToString());
-        _timerManager.SimulateOnApplicationPause(false); // Simula retorno ao app
+        _timerManager.ApplicationPause(false); // Simula retorno ao app
 
         // Act
         float expectedTimeRemaining = 1500 - (float)elapsed.TotalSeconds;
@@ -44,11 +44,11 @@ public class TimerTests
         // Arrange
         _timerManager.SetTotalSeconds(300); // 5 minutos
         _timerManager.SetTimerState(TIMER_STATE.TIMER_ON);
-        _timerManager.SimulateOnApplicationPause(true);
+        _timerManager.ApplicationPause(true);
         // Simula saída e retorno após 6 minutos
         DateTime fakeExitTime = DateTime.Now.AddMinutes(-6);
         PlayerPrefs.SetString("DatetimeExit", fakeExitTime.ToString());
-        _timerManager.SimulateOnApplicationPause(false);
+        _timerManager.ApplicationPause(false);
 
         // Act & Assert
         Assert.AreEqual(0, _timerManager.GetSecondsLeft(), 1.0f);
@@ -63,7 +63,7 @@ public class TimerTests
         _timerManager.SetTimerState(TIMER_STATE.TIMER_PAUSED);
 
         // Act
-        _timerManager.SimulateOnApplicationQuit();
+        _timerManager.ApplicationQuit();
 
         // Assert
         Assert.AreEqual(600, _timerManager.GetSecondsLeft());

@@ -13,11 +13,24 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
 
     [SerializeField] private GameObject minimizedTimer; // Objeto do timer minimizado para poder controlá-lo
 
+    #region Unity Default Methods
     protected new void Awake()
     {
         LoadTimerInfo();
     }
 
+    private void OnApplicationQuit()
+    {
+        ApplicationQuit();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        ApplicationPause(pauseStatus);
+    }
+    
+    #endregion
+    
     #region Timer Control
     // Corrotina para atualizar o timer a cada frame
     private IEnumerator UpdateTimer()
@@ -33,7 +46,6 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
     }
 
     #endregion
-    
     
     #region Timer Save Information
 
@@ -82,33 +94,14 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
     
     #endregion
     
-    #region Unity App Default State Events
+    #region Methods for Application Events
 
-    private void OnApplicationQuit()
-    {
-        SaveTimerInfo((int)_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
-    }
-
-    private void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-        {
-            SaveTimerInfo(_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
-        }
-        else
-        {
-            LoadTimerInfo();
-        }
-    }
-    
-    #region Simulation of Application Events
-
-    public void SimulateOnApplicationQuit()
+    public void ApplicationQuit()
     {
         SaveTimerInfo((int)_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
     }
     
-    public void SimulateOnApplicationPause(bool pauseStatus)
+    public void ApplicationPause(bool pauseStatus)
     {
         if (pauseStatus)
         {
@@ -122,7 +115,7 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
     
     #endregion
 
-    #endregion
+    
     
     #region Set
     // Seta o total de segundos do timer 
