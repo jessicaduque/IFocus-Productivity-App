@@ -26,11 +26,12 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
         ; // Total de segundos do timer quando é definido 
 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I; // Pegar o singleton do UIPanelsManager para controlar o painel de timer maximizado
-    private TimerManager _timerManager => TimerManager.I; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
+    private TimerManager _timerManager; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
     
     // Método default da Unity que roda uma única vez quando um objeto ativo está sendo carregado 
     private new void Awake()
     {
+        _timerManager = FindObjectOfType<TimerManager>();
         SetupButtons(); // Método para definir o que cada botão faz no início (mantendo assim maior controle dos componentes)
     }
     

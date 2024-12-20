@@ -1,3 +1,4 @@
+using System;
 using TMPro; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.UI; // Biblioteca padrão da Unity para manipulação de componentes de UI
@@ -8,8 +9,13 @@ public class MinimizedTimer : MonoBehaviour
     [SerializeField] private Image _fillImage; // Imagem que se preenche para mostrar progresso conforme timer vai passando
 
     private float _totalSeconds; // Para setar sempre corretamente a imagem de progresso, é necessário saber o total de segundos setado originalmente pelo usuário quando um timer é definido
-    private TimerManager _timerManager => TimerManager.I; // Pega o singleton do TimerManager para obter informações do timer
-    
+    private TimerManager _timerManager; // Pega o singleton do TimerManager para obter informações do timer
+
+    private void Awake()
+    {
+        _timerManager = FindObjectOfType<TimerManager>();
+    }
+
     // Método default da Unity que roda uma única vez (após o Awake) em um objeto ativo bem antes da função de update começar a rodar a cada frame  
     private void Start()
     {

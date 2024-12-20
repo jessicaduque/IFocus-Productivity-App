@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.Events; // Biblioteca padrão da Unity para manipulação de eventos da Unity
-using Utils.Singleton; // Script de Singleton criado para herdar e ser chamado com facilidade
-public class TimerManager : Singleton<TimerManager> // Esta classe é um singleton pois serve de controlador principal do timer e é o único a existir no projeto, então será mais fácil acessá-lo de outras classes
+//using Utils.Singleton; // Script de Singleton criado para herdar e ser chamado com facilidade
+public class TimerManager : MonoBehaviour // Esta classe é um singleton pois serve de controlador principal do timer e é o único a existir no projeto, então será mais fácil acessá-lo de outras classes
 {
     private float _totalSeconds; // Total de segundos definido para um timer novo pelo usuário
     private float _secondsLeft; // Quantidade de segundos faltando para o timer terminar
@@ -86,8 +86,6 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
 
     private void OnApplicationQuit()
     {
-        Debug.Log("On Application Quit");
-        Debug.Log(timerState);
         SaveTimerInfo((int)_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
     }
 
@@ -95,15 +93,34 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
     {
         if (pauseStatus)
         {
-            Debug.Log("On Application Pause");
             SaveTimerInfo(_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
         }
         else
         {
-            Debug.Log("On Application Unpause");
             LoadTimerInfo();
         }
     }
+    
+    #region Simulation of Application Events
+
+    public void SimulateOnApplicationQuit()
+    {
+        SaveTimerInfo((int)_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
+    }
+    
+    public void SimulateOnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveTimerInfo(_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
+        }
+        else
+        {
+            LoadTimerInfo();
+        }
+    }
+    
+    #endregion
 
     #endregion
     
@@ -124,15 +141,15 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
             case TIMER_STATE.TIMER_ON:
                 StopAllCoroutines(); // Garante de que não existe já algum timer ativado
                 StartCoroutine(UpdateTimer()); // Se timer é ativado, uma corrotina de atualizar o timer é criada
-                minimizedTimer.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
+                minimizedTimer?.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
                 break;
             case TIMER_STATE.TIMER_OFF:
-                minimizedTimer.SetActive(false); // Se timer é desastivado, o objeto do timer minimizado é desligado 
+                minimizedTimer?.SetActive(false); // Se timer é desastivado, o objeto do timer minimizado é desligado 
                 StopAllCoroutines(); // Se timer é desastivado, mata todas as instâncias de corrotina que estão rodando
                 break;
             case TIMER_STATE.TIMER_PAUSED:
                 StopAllCoroutines(); // Se timer é pausado, mata todas as instâncias de corrotina que estão rodando
-                minimizedTimer.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
+                minimizedTimer?.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
                 break;
         }
     }
