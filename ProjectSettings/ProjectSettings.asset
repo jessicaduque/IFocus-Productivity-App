@@ -823,11 +823,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: acf8e660-1660-4788-818f-c89ed164b1d6
+  cloudProjectId: ed6620ed-a3cd-4116-b54c-ec405c8d5743
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Focus_App
-  organizationId: jessiend3
+  projectName: IFocus-Productivity-App
+  organizationId: jduquedeveloper
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

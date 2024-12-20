@@ -20,6 +20,13 @@ public class MinimizedTimer : MonoBehaviour
     private void OnEnable()
     {
         SetTotalSeconds(); // Seta o total de segundos do timer
+        
+        float secondsLeft = _timerManager.GetSecondsLeft();
+        int hours = (int) (secondsLeft / 3600);
+        int minutes = (int) ((secondsLeft - hours * 3600) / 60);
+        int seconds = (int) (secondsLeft % 60);
+        _thisText.text = $"{hours:0}:{minutes:00}:{seconds:00}";
+        _fillImage.fillAmount = Mathf.InverseLerp(0, _totalSeconds, secondsLeft);
     }
     // Método default da Unity que toda uma única vez toda vez que o objeto ligado ao script é desativado
     private void OnDisable()

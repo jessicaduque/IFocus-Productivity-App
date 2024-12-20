@@ -22,7 +22,8 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     [SerializeField] private TextMeshProUGUI minutesText;
     [SerializeField] private TextMeshProUGUI secondsText;
 
-    private float totalSeconds; // Total de segundos do timer quando é definido 
+    private float _totalSeconds
+        ; // Total de segundos do timer quando é definido 
 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I; // Pegar o singleton do UIPanelsManager para controlar o painel de timer maximizado
     private TimerManager _timerManager => TimerManager.I; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
@@ -37,9 +38,21 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     private void OnEnable()
     {
         _timerManager.endTimerAction += InitialUI; // Inscreve a método de UI na ação de fim de timer para atualizar a UI ao estado primário dele
-        
-        if(_timerManager.GetTimerState() == TIMER_STATE.TIMER_OFF) // Se o timer estiver no estado desligado, atualiza a UI à seu estado primário
+
+        if (_timerManager.GetTimerState() == TIMER_STATE.TIMER_OFF)// Se o timer estiver no estado desligado, atualiza a UI à seu estado primário
+        {
             InitialUI();
+        } 
+        else if (_timerManager.GetTimerState() == TIMER_STATE.TIMER_PAUSED) // Se o timer estiver no estado pausado, atualiza a UI à seu estado de pausa e a quantidade total de segundos
+        {
+            _totalSeconds = _timerManager.GetTotalSeconds();
+            PauseUI(); 
+        }
+        else // Se o timer estiver no estado ligado, atualiza a UI à seu estado de ativado e a quantidade total de segundos
+        {
+            _totalSeconds = _timerManager.GetTotalSeconds();
+            PlayUI();
+        }
     }
     // Método default da Unity que roda toda vez que o objeto ligado ao script é desativado
     private void OnDisable()
@@ -49,21 +62,21 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     // Método para setar o total de segundos qunando um timer novo é definido
     private void SetTotalSeconds()
     {
-        totalSeconds = 0;
+        _totalSeconds = 0;
     
         // Cálculo para mostrar as horas faltando ao usuário
         if(hoursInputField.text != "" && hoursInputField.text != " ")
-            totalSeconds += int.Parse(hoursInputField.text) * 3600;
+            _totalSeconds += int.Parse(hoursInputField.text) * 3600;
         // Cálculo para mostrar os minutos faltando ao usuário
         if(minutesInputField.text != "" && minutesInputField.text != " ")
-            totalSeconds += int.Parse(minutesInputField.text) * 60;
+            _totalSeconds += int.Parse(minutesInputField.text) * 60;
         // Cálculo para mostrar os segundos faltando ao usuário
         if(secondsInputField.text != "" && secondsInputField.text != " ")
-            totalSeconds += int.Parse(secondsInputField.text);
+            _totalSeconds += int.Parse(secondsInputField.text);
         
-        totalSeconds += 1; // Gambiarra para que quando o timer iniciar, o timer não começar visualmente com um segundo a menos e o usuário estranhar
+        _totalSeconds += 1; // Gambiarra para que quando o timer iniciar, o timer não começar visualmente com um segundo a menos e o usuário estranhar
         
-        _timerManager.SetTotalSeconds(totalSeconds); // Seta o total de segundos no TimerManager para controlar as informações de segundos do timer
+        _timerManager.SetTotalSeconds(_totalSeconds); // Seta o total de segundos no TimerManager para controlar as informações de segundos do timer
     }
     // Método para setup inicial dos botões com seus funcionamentos
     private void SetupButtons()
@@ -112,6 +125,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     // Método para atualizar a UI do timer maximizado quando ele é setado e ligado
     private void PlayUI()
     {
+        uiFill.fillAmount = Mathf.InverseLerp(0, _totalSeconds, _timerManager.GetSecondsLeft());
         hoursInputField.text = "";
         minutesInputField.text = "";
         secondsInputField.text = "";
@@ -123,14 +137,37 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
         setTimerText.SetActive(false);
         
         playButton.gameObject.SetActive(false);
+        resumeButton.gameObject.SetActive(false);
         pauseButton.gameObject.SetActive(true);
         quitButton.gameObject.SetActive(true);
     }
     // Método para atualizar a UI do timer maximizado quando ele é pausado
     private void PauseUI()
     {
+        hoursInputField.text = "";
+        minutesInputField.text = "";
+        secondsInputField.text = "";
+        
+        hoursInputField.gameObject.SetActive(false);
+        minutesInputField.gameObject.SetActive(false);
+        secondsInputField.gameObject.SetActive(false);
+        
+        setTimerText.SetActive(false);
+        
+        float secondsLeft = _timerManager.GetSecondsLeft();
+        if(secondsLeft < 0) secondsLeft = 0;
+        int hours = (int) (secondsLeft / 3600);
+        int minutes = (int) ((secondsLeft - hours * 3600) / 60);
+        int seconds = (int) (secondsLeft % 60);
+        hoursText.text = $"{hours:0}";
+        minutesText.text = $"{minutes:00}";
+        secondsText.text = $"{seconds:00}";
+        uiFill.fillAmount = Mathf.InverseLerp(0, _totalSeconds, secondsLeft);
+        
+        playButton.gameObject.SetActive(false);
         pauseButton.gameObject.SetActive(false);
         resumeButton.gameObject.SetActive(true);
+        quitButton.gameObject.SetActive(true);
     }
     // Método para atualizar a UI do timer maximizado quando ele é ainda não foi ligado e aguardo inputs do usuário
     private void InitialUI()
@@ -184,7 +221,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
             hoursText.text = $"{hours:0}";
             minutesText.text = $"{minutes:00}";
             secondsText.text = $"{seconds:00}";
-            uiFill.fillAmount = Mathf.InverseLerp(0, totalSeconds, secondsLeft);
+            uiFill.fillAmount = Mathf.InverseLerp(0, _totalSeconds, secondsLeft);
         }
     }
 

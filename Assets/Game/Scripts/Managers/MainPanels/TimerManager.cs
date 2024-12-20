@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.Events; // Biblioteca padrão da Unity para manipulação de eventos da Unity
@@ -12,6 +13,11 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
 
     [SerializeField] private GameObject minimizedTimer; // Objeto do timer minimizado para poder controlá-lo
 
+    protected new void Awake()
+    {
+        LoadTimerInfo();
+    }
+
     #region Timer Control
     // Corrotina para atualizar o timer a cada frame
     private IEnumerator UpdateTimer()
@@ -24,6 +30,79 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
         
         SetTimerState(TIMER_STATE.TIMER_OFF); // Seta o estado do timer para desativado quando o timer acabar
         endTimerAction?.Invoke(); // Invoca a ação de fim de timer
+    }
+
+    #endregion
+    
+    
+    #region Timer Save Information
+
+    private void SaveTimerInfo(float secondsTimerLeft, float totalSeconds, bool isPaused)
+    {
+        PlayerPrefs.SetFloat("SecondsLeftTimer", secondsTimerLeft);
+        PlayerPrefs.SetFloat("TotalSecondsTimer", totalSeconds);
+        PlayerPrefs.SetString("DatetimeExit", DateTime.Now.ToString());
+        PlayerPrefs.SetInt("TimerIsPaused", isPaused ? 1 : 0);
+    }
+
+    private void LoadTimerInfo()
+    {
+        if (PlayerPrefs.HasKey("SecondsLeftTimer"))
+        {
+            DateTime dateOfExit = DateTime.Parse(PlayerPrefs.GetString("DatetimeExit"));
+            var timeSinceExit = DateTime.Now - dateOfExit;
+            float secondsLeftExit = PlayerPrefs.GetFloat("SecondsLeftTimer");
+            bool isPaused = PlayerPrefs.GetInt("TimerIsPaused") == 1;
+            if (isPaused && secondsLeftExit > 0)
+            {
+                _secondsLeft = secondsLeftExit;
+                _totalSeconds = PlayerPrefs.GetFloat("TotalSecondsTimer");
+                SetTimerState(TIMER_STATE.TIMER_PAUSED);
+            }
+            else
+            {
+                _secondsLeft = secondsLeftExit - (float)timeSinceExit.TotalSeconds;
+                if (_secondsLeft <= 0)
+                {
+                    _secondsLeft = 0;
+                    SetTimerState(TIMER_STATE.TIMER_OFF);
+                    if (secondsLeftExit != 0)
+                    {
+                        endTimerAction?.Invoke();
+                    }
+                }
+                else
+                {
+                    _totalSeconds = PlayerPrefs.GetFloat("TotalSecondsTimer");
+                    SetTimerState(TIMER_STATE.TIMER_ON);
+                }
+            }
+        }
+    }
+    
+    #endregion
+    
+    #region Unity App Default State Events
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log("On Application Quit");
+        Debug.Log(timerState);
+        SaveTimerInfo((int)_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            Debug.Log("On Application Pause");
+            SaveTimerInfo(_secondsLeft, _totalSeconds, timerState == TIMER_STATE.TIMER_PAUSED);
+        }
+        else
+        {
+            Debug.Log("On Application Unpause");
+            LoadTimerInfo();
+        }
     }
 
     #endregion
@@ -43,6 +122,7 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
         switch (newState)
         {
             case TIMER_STATE.TIMER_ON:
+                StopAllCoroutines(); // Garante de que não existe já algum timer ativado
                 StartCoroutine(UpdateTimer()); // Se timer é ativado, uma corrotina de atualizar o timer é criada
                 minimizedTimer.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
                 break;
@@ -52,6 +132,7 @@ public class TimerManager : Singleton<TimerManager> // Esta classe é um singlet
                 break;
             case TIMER_STATE.TIMER_PAUSED:
                 StopAllCoroutines(); // Se timer é pausado, mata todas as instâncias de corrotina que estão rodando
+                minimizedTimer.SetActive(true); // Se timer é ativado, o objeto do timer minimizado é ligado
                 break;
         }
     }
