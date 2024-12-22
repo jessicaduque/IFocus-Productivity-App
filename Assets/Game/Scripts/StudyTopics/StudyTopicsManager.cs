@@ -13,7 +13,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     [SerializeField] GameObject _studyTopicPrefab;
     
     private List<StudyTopic> _listItems = new List<StudyTopic>();
-    private int _characterLimitName = 20;
+    private int _characterLimitName = 30;
     private int _maxAmountTopicsObjects = 40;
     private int _amountTopicsObjects = 0;
     

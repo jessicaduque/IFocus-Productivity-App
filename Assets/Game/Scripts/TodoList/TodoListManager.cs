@@ -134,6 +134,7 @@ public class TodoListManager : Singleton<TodoListManager>
         }
 
         _topicDropdown.options = options;
+        _topicDropdown.value = 0;
     }
 
     // Checks if all the input fields have some form of text in them
@@ -147,7 +148,6 @@ public class TodoListManager : Singleton<TodoListManager>
     {
         _addInputField.text = "";
     }
-    // Resets the dropdown to its default option
     
     // Shows a visual error to the player if any of the input fields hasn't been filled in
     private void ShowInputFieldError()
