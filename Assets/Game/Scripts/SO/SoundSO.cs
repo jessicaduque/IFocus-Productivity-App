@@ -10,4 +10,6 @@ public class SoundSO : ScriptableObject
     public float volume;
     [Range(0.1f, 3)]
     public float pitch;
+
+    public float timeSeconds;
 }
