@@ -12,13 +12,14 @@ public class Plantinhas : MonoBehaviour
         public Sprite wiltedSprite;
         [HideInInspector] public bool isWilted = false;
     }
-    public Plant[] plants;
+    public List<Plant> plants; 
+    public float timeBetweenRounds = 5f; 
+    private List<Plant> previouslyWiltedPlants = new List<Plant>(); 
+
     private void Start()
     {
-        foreach (var plant in plants)
-        {
-            SetPlantHealthy(plant);
-        }
+        InitializePlants();
+        StartCoroutine(StartRounds());
     }
 
     private void Update()
@@ -33,10 +34,55 @@ public class Plantinhas : MonoBehaviour
                 {
                     if (hit.collider.gameObject == plant.plantObject)
                     {
-                        TogglePlantState(plant);
+                        ToggleState(plant);
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    private void InitializePlants()
+    {
+        foreach (var plant in plants)
+        {
+            SetPlantHealthy(plant);
+        }
+    }
+
+    private IEnumerator StartRounds()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(timeBetweenRounds);
+            SelectRandomPlantToWilt();
+        }
+    }
+
+    private void SelectRandomPlantToWilt()
+    {
+        // Filtra as plantas que estavam saudaveis na rodada anterior
+        List<Plant> eligiblePlants = plants.FindAll(p => !p.isWilted && !previouslyWiltedPlants.Contains(p));
+
+        if (eligiblePlants.Count > 0)
+        {
+            // Escolhe a planta para murchar
+            Plant plantToWilt = eligiblePlants[Random.Range(0, eligiblePlants.Count)];
+            SetPlantWilted(plantToWilt);
+        }
+
+        // Atualiza a lista de plantas murchas
+        UpdatePreviouslyWiltedPlants();
+    }
+
+    private void UpdatePreviouslyWiltedPlants()
+    {
+        previouslyWiltedPlants.Clear();
+        foreach (var plant in plants)
+        {
+            if (plant.isWilted)
+            {
+                previouslyWiltedPlants.Add(plant);
             }
         }
     }
@@ -53,15 +99,19 @@ public class Plantinhas : MonoBehaviour
         plant.plantObject.GetComponent<SpriteRenderer>().sprite = plant.wiltedSprite;
     }
 
-    private void TogglePlantState(Plant plant)
+    private void ToggleState(Plant plant)
     {
-        if (plant.isWilted)
+        SetPlantHealthy(plant);
+    }
+
+    /*
+    public void OnPlantClicked(GameObject clickedPlant)
+    {
+        Plant clicked = plants.Find(p => p.plantObject == clickedPlant);
+        if (clicked != null && clicked.isWilted)
         {
-            SetPlantHealthy(plant);
-        }
-        else
-        {
-            SetPlantWilted(plant);
+            SetPlantHealthy(clicked);
         }
     }
+    */
 }
