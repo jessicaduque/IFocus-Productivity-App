@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Plantinhas : MonoBehaviour
 {
@@ -90,18 +91,20 @@ public class Plantinhas : MonoBehaviour
     private void SetPlantHealthy(Plant plant)
     {
         plant.isWilted = false;
-        plant.plantObject.GetComponent<SpriteRenderer>().sprite = plant.healthySprite;
+        plant.plantObject.GetComponent<Image>().sprite = plant.healthySprite;
     }
 
     private void SetPlantWilted(Plant plant)
     {
         plant.isWilted = true;
-        plant.plantObject.GetComponent<SpriteRenderer>().sprite = plant.wiltedSprite;
+        plant.plantObject.GetComponent<Image>().sprite = plant.wiltedSprite;
     }
 
     private void ToggleState(Plant plant)
     {
         SetPlantHealthy(plant);
+        Button botaoPlanta = new Button();
+        botaoPlanta.interactable = true;
     }
 
     /*
