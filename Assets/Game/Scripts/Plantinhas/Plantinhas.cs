@@ -103,8 +103,8 @@ public class Plantinhas : MonoBehaviour
     private void ToggleState(Plant plant)
     {
         SetPlantHealthy(plant);
-        Button botaoPlanta = new Button();
-        botaoPlanta.interactable = true;
+        //Button botaoPlanta;
+        //botaoPlanta.interactable = true;
     }
 
     /*
