@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utils.Singleton;
 public class StudyTopicsManager : Singleton<StudyTopicsManager>
@@ -17,7 +18,9 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     private int _maxAmountTopicsObjects = 40;
     private int _amountTopicsObjects = 0;
     
+    private EventSystem _eventSystem => EventSystem.current;
     private JSONManager _jsonManager => JSONManager.I;
+    private TodoListManager _toDoListManager => TodoListManager.I; 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
     
     protected override void Awake()
@@ -70,7 +73,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
                 inputField.interactable = true;
                 inputField.ActivateInputField();
             });
-            inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(studyTopic.GetObjName(), inputField); });
+            inputField.onEndEdit.AddListener(delegate { CheckAndEditStudyTopic(studyTopic.GetObjName(), inputField);});
             studyTopic.GetDeleteButton()?.onClick.AddListener(delegate { _uiPanelsManager.ControlDeleteTopicWarningPanel(true, studyTopic.GetObjName()); });
             
             _amountTopicsObjects++;
@@ -94,7 +97,6 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
         }
         
     }
-
     private void CheckAndEditStudyTopic(string originalName, TMP_InputField inputField)
     {
         string newName = inputField.text;
@@ -113,6 +115,8 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
                 topic.SetObjName(newName);
             }
         }
+
+        _toDoListManager.EditToDoItemByStudyTopic(originalName, newName);
         
         inputField.interactable = false;
     }
@@ -125,6 +129,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
             if (topic.GetObjName() == topicName)
             {
                 _jsonManager.DeleteStudytopic(topicName);
+                _toDoListManager.DeleteToDoItemByStudyTopic(topicName);
                 _listItems.Remove(topic);
                 Destroy(topic.gameObject);
                 _amountTopicsObjects--;

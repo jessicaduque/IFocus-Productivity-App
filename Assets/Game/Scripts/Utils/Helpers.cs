@@ -8,7 +8,7 @@ public static class Helpers
     public static Camera cam => Camera.main;
     public static int screenWidth => Screen.width;
     public static int screenHeight => Screen.height;
-
+    
     public static void FadeInPanel(GameObject panel)
     {
         panel.SetActive(true);

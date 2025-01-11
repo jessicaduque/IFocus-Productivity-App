@@ -552,8 +552,6 @@ MonoBehaviour:
   _thisInputField: {fileID: 1985239341557120792}
   b_delete: {fileID: 9150400063572032813}
   b_edit: {fileID: 6169063776291519469}
-  objName: 
-  isDefault: 0
 --- !u!114 &1137183039154086323
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -42,15 +42,13 @@ public class TodoListObject : MonoBehaviour
         this.topic = type;
         this.isChecked = isChecked;
         this._thisStudyTopic = _studyTopicsManager.GetSpecificStudyTopic(type);
-        this._thisStudyTopic.nameAlteredAction += SetType;
         
         t_item.text = objName;
         im_line.gameObject.SetActive(true);
     }
 
-    private void SetType(string newTypeName)
+    public void SetType(string newTypeName)
     {
         this.topic = newTypeName;
-        
     }
 }

@@ -96,13 +96,34 @@ public class TodoListManager : Singleton<TodoListManager>
         item.ChangeLineState(true);
         SaveJSON();
     }
-
     private void UncheckItem(TodoListObject item)
     {
         item.ChangeLineState(false);
         SaveJSON();
     }
 
+    public void EditToDoItemByStudyTopic(string originalTopicName, string newTopicName)
+    {
+        foreach (TodoListObject todoObject in _todoListObjects)
+        {
+            if (todoObject.topic == originalTopicName)
+            {
+                todoObject.SetType(newTopicName);
+                SaveJSON();
+            }
+        }
+    }
+    public void DeleteToDoItemByStudyTopic(string topicName)
+    {
+        for (int todoObjectIndex = 0; todoObjectIndex < _amountListObjects; todoObjectIndex++)
+        {
+            if (_todoListObjects[todoObjectIndex].topic == topicName)
+            {
+                DeleteItem(_todoListObjects[todoObjectIndex]);
+                todoObjectIndex--;
+            }
+        }
+    }
     public void DeleteItem(TodoListObject item)
     {
         _todoListObjects.Remove(item);
