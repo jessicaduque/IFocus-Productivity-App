@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -103,7 +104,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
         if (TopicNameAlreadyExists(newName) ||newName.Length == 0 || newName.Length > _characterLimitName)
         {
             inputField.text = originalName;
-            inputField.interactable = false;
+            StartCoroutine(DisableInput(inputField));
             return;
         }
 
@@ -117,8 +118,8 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
         }
 
         _toDoListManager.EditToDoItemByStudyTopic(originalName, newName);
-        
-        inputField.interactable = false;
+
+        StartCoroutine(DisableInput(inputField));
     }
 
 
@@ -171,6 +172,12 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     private void ClearInputField()
     {
         _addInputField.text = "";
+    }
+    
+    private IEnumerator DisableInput (TMP_InputField input)
+    {
+        yield return new WaitForEndOfFrame();
+        input.interactable = false;
     }
     
     // Shows a visual error to the player if any of the input fields hasn't been filled in
