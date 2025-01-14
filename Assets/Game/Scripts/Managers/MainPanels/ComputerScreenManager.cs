@@ -16,7 +16,7 @@ public class ComputerScreenManager : MonoBehaviour
         b_todoList.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(true); });
         b_studyTopics.onClick.AddListener(delegate { _uiPanelsManager.ControlStudyTopicsPanel(true); });
         b_statistics.onClick.AddListener(delegate { _uiPanelsManager.ControlStatisticsPanel(true); });
-        b_music.onClick.AddListener(delegate { _uiPanelsManager.ControlMusicPanel(true); });
+        //b_music.onClick.AddListener(delegate { _uiPanelsManager.ControlMusicPanel(true); });
     }
 
     private void ControlStateButtons(bool activated)
@@ -25,6 +25,6 @@ public class ComputerScreenManager : MonoBehaviour
         b_todoList.interactable = activated;
         b_studyTopics.interactable = activated;
         b_statistics.interactable = activated;
-        b_music.interactable = activated;
+        //b_music.interactable = activated;
     }
 }
