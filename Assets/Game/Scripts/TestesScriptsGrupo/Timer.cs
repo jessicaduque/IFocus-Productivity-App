@@ -13,7 +13,7 @@ public class Timer : MonoBehaviour
     public float timeLimit = 60f;
     public bool inMinutes;
     
-    [SerializeField] LoopVerticalScrollRect scrollRect;
+    //[SerializeField] LoopVerticalScrollRect scrollRect;
     
     [Space]
     public UnityEvent OnStart, OnComplete;
@@ -51,8 +51,6 @@ public class Timer : MonoBehaviour
         GameObject currentItem = null;
         if (currentItem != null)
         {
-            Debug.Log(currentItem.GetComponent<ScrollIndexCallbackTime>().GetFinalNumber());
-            
             multiplierFactor = 1f / timeLimit;
             startTimer = true;
             slider.fillAmount = time * multiplierFactor;
