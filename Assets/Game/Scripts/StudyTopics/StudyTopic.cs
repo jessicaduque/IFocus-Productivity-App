@@ -9,15 +9,16 @@ public class StudyTopic : MonoBehaviour
     [SerializeField] private Button b_delete;
     [SerializeField] private Button b_edit;
 
-    private string objName;
-    private bool isDefault;
+    private string _objName;
+    private bool _isDefault;
+    private float _timeStudiedTotalSeconds;
 
     public UnityAction<string> nameAlteredAction;
     public void SetObjectInfo(string name, bool isDefault)
     {
-        this.objName = name;
-        this.isDefault = isDefault;
-        _thisInputField.text = objName;
+        this._objName = name;
+        this._isDefault = isDefault;
+        _thisInputField.text = _objName;
     }
 
     
@@ -25,13 +26,18 @@ public class StudyTopic : MonoBehaviour
 
     public void SetObjName(string objName)
     {
-        this.objName = objName;
+        this._objName = objName;
         nameAlteredAction?.Invoke(objName);
     }
 
     public void SetIsDefault(bool isDefault)
     {
-        this.isDefault = isDefault;
+        this._isDefault = isDefault;
+    }
+
+    public void SetTimeStudiedTotalSeconds(float timeStudiedTotalSeconds)
+    {
+        _timeStudiedTotalSeconds = timeStudiedTotalSeconds;
     }
     
     #endregion
@@ -39,11 +45,16 @@ public class StudyTopic : MonoBehaviour
 
     public string GetObjName()
     {
-        return objName;
+        return _objName;
     }
     public bool GetIsDefault()
     {
-        return isDefault;
+        return _isDefault;
+    }
+    
+    public float GetTimeStudiedTotalSeconds()
+    {
+        return _timeStudiedTotalSeconds;
     }
     
     public Button GetDeleteButton()
