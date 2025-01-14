@@ -1,3 +1,4 @@
+using System;
 using TMPro; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.UI; // Biblioteca padrão da Unity para manipulação de componentes de UI
@@ -27,7 +28,8 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I; // Pegar o singleton do UIPanelsManager para controlar o painel de timer maximizado
     private TimerManager _timerManager; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
-    
+
+
     // Método default da Unity que roda uma única vez quando um objeto ativo está sendo carregado 
     private new void Awake()
     {
@@ -59,6 +61,8 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     private void OnDisable()
     {
         _timerManager.endTimerAction -= InitialUI; // Desinscreve a método de UI inicial à ação de fim de timer para ele não ser chamado  se o painel está desativado
+        _uiPanelsManager.ControlTodoListPanel(true);
+        _uiPanelsManager.ControlAlarmPanel(false);
     }
     // Método para setar o total de segundos qunando um timer novo é definido
     private void SetTotalSeconds()
