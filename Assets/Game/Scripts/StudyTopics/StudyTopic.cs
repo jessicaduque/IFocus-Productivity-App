@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
+using Random = UnityEngine.Random;
 public class StudyTopic : MonoBehaviour
 {
     [SerializeField] TMP_InputField _thisInputField;
@@ -12,6 +12,12 @@ public class StudyTopic : MonoBehaviour
     private string _objName;
     private bool _isDefault;
     private float _timeStudiedTotalSeconds;
+
+    private void Awake()
+    {
+        // PARA TESTES DE ESTATÍSTICAS
+        _timeStudiedTotalSeconds = Random.Range(120f, 3000f);
+    }
 
     public UnityAction<string> nameAlteredAction;
     public void SetObjectInfo(string name, bool isDefault)
