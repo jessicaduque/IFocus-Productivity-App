@@ -23,7 +23,7 @@ public class JSONManager : DontDestroySingleton<JSONManager>
         // Inicialização tópicos de estudo
         if (!File.Exists(_studyTopicsFilePath) || File.ReadAllText(_studyTopicsFilePath) == string.Empty)
         {
-            StudyTopicItem item = new StudyTopicItem("Default", true);
+            StudyTopicItem item = new StudyTopicItem("Default", true, 0);
             File.WriteAllText(_studyTopicsFilePath, JsonUtility.ToJson(item) + "\n");
         }
     }
@@ -84,7 +84,7 @@ public class JSONManager : DontDestroySingleton<JSONManager>
         
         for (int amountListObjectsIndex = 0; amountListObjectsIndex < amountListObjects; amountListObjectsIndex++)
         {
-            StudyTopicItem item = new StudyTopicItem(topics[amountListObjectsIndex].GetObjName(), topics[amountListObjectsIndex].GetIsDefault());
+            StudyTopicItem item = new StudyTopicItem(topics[amountListObjectsIndex].GetObjName(), topics[amountListObjectsIndex].GetIsDefault(), topics[amountListObjectsIndex].GetTimeStudiedTotalSeconds());
             contents += JsonUtility.ToJson(item) + "\n";
         }
 
@@ -165,11 +165,13 @@ public class JSONManager : DontDestroySingleton<JSONManager>
     {
         public string objName;
         public bool isDefault;
+        public float timeStudiedTotalSeconds;
     
-        public StudyTopicItem(string name, bool isDefault)
+        public StudyTopicItem(string name, bool isDefault, float timeStudiedTotalSeconds)
         {
             this.objName = name;
             this.isDefault = isDefault;
+            this.timeStudiedTotalSeconds = this.timeStudiedTotalSeconds;
         }
     }
     

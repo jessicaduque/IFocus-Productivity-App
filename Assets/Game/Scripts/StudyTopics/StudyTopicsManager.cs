@@ -13,6 +13,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
     [SerializeField] Button b_create;
     [SerializeField] Button b_close;
     [SerializeField] GameObject _studyTopicPrefab;
+    [SerializeField] private StudyTopic timestats;
     
     private List<StudyTopic> _listItems = new List<StudyTopic>();
     private int _characterLimitName = 30;
@@ -68,7 +69,7 @@ public class StudyTopicsManager : Singleton<StudyTopicsManager>
             TMP_InputField inputField = studyTopic.GetInputField();
             inputField.characterLimit = _characterLimitName;
             inputField.text = topicName;
-            studyTopic.SetObjectInfo(topicName, isDefault);
+            studyTopic.SetObjectInfo(topicName, isDefault, timestats.GetTimeStudiedTotalSeconds());
             studyTopic.GetEditButton().onClick.AddListener(() =>
             {
                 inputField.interactable = true;

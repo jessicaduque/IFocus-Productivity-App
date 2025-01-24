@@ -20,11 +20,12 @@ public class StudyTopic : MonoBehaviour
     }
 
     public UnityAction<string> nameAlteredAction;
-    public void SetObjectInfo(string name, bool isDefault)
+    public void SetObjectInfo(string name, bool isDefault, float timeStudiedTotalSeconds)
     {
         this._objName = name;
         this._isDefault = isDefault;
         _thisInputField.text = _objName;
+        this._timeStudiedTotalSeconds = timeStudiedTotalSeconds;
     }
 
     
