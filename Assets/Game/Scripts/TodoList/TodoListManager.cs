@@ -6,21 +6,25 @@ using Utils.Singleton;
 
 public class TodoListManager : Singleton<TodoListManager>
 {
-    [SerializeField] private Transform _content;
-    [SerializeField] private GameObject _addPanel;
-    [SerializeField] private Button b_addPanelOpen;
-    [SerializeField] private Button b_addPanelClose;
-    [SerializeField] private Button b_createItem;
-    [SerializeField] private Button b_close;
-    [SerializeField] private TextMeshProUGUI[] _amountItemsTexts;
-    [SerializeField] private GameObject _todoListItemPrefab;
-    [SerializeField] private TMP_InputField _addInputField;
-    [SerializeField] private TMP_Dropdown _topicDropdown;
+    [SerializeField] private Transform content;
+    [SerializeField] private GameObject addPanel;
+    [SerializeField] private Button addPanelOpenButton;
+    [SerializeField] private Button addPanelCloseButton;
+    [SerializeField] private Button createItemButton;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private TextMeshProUGUI[] amountItemsTexts;
+    [SerializeField] private GameObject todoListItemPrefab;
+    [SerializeField] private TMP_InputField addInputField;
+    [SerializeField] private TMP_Dropdown topicDropdown;
+    [SerializeField] private GameObject progressBarObject;
+    [SerializeField] private Image progressBarFillImage;
+    [SerializeField] private GameObject noTasksYetTextObject;
     
     private List<TodoListObject> _todoListObjects = new List<TodoListObject>();
     private int _characterLimitName = 30;
     private int _maxAmountListObjects = 40;
-    private int _amountListObjects = 0;
+    private int _amountListObjects;
+    private int _amountListObjectsChecked;
 
     private JSONManager _jsonManager => JSONManager.I;
     private StudyTopicsManager _studyTopicsManager => StudyTopicsManager.I; 
@@ -29,10 +33,10 @@ public class TodoListManager : Singleton<TodoListManager>
     protected override void Awake()
     {
         base.Awake();
-        b_createItem.onClick.AddListener(delegate { CreateTodoListItem(_addInputField.text, _topicDropdown.captionText.text); } );
-        b_addPanelOpen.onClick.AddListener(delegate { SwitchMode(1); } );
-        b_addPanelClose.onClick.AddListener(delegate { SwitchMode(0); } );
-        b_close.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(false); } );
+        createItemButton.onClick.AddListener(delegate { CreateTodoListItem(addInputField.text, topicDropdown.captionText.text); } );
+        addPanelOpenButton.onClick.AddListener(delegate { SwitchMode(1); } );
+        addPanelCloseButton.onClick.AddListener(delegate { SwitchMode(0); } );
+        closeButton.onClick.AddListener(delegate { _uiPanelsManager.ControlTodoListPanel(false); } );
         InitInputField();
     }
 
@@ -52,23 +56,24 @@ public class TodoListManager : Singleton<TodoListManager>
 
         if (_amountListObjects < _maxAmountListObjects)
         {
-            GameObject item = Instantiate(_todoListItemPrefab, _content);
+            GameObject item = Instantiate(todoListItemPrefab, content);
             TodoListObject itemObject = item.GetComponent<TodoListObject>();
             itemObject.SetObjectInfo(name, topic, isChecked);
             _todoListObjects.Add(itemObject);
             TodoListObject temp = itemObject;
             Toggle itemToggle = itemObject.GetComponent<Toggle>();
             itemToggle.isOn = isChecked;
+            _amountListObjectsChecked += isChecked ? 1 : 0;
             itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
         
             _amountListObjects++;
             
             if(_amountListObjects == 40)
             {
-                b_createItem.interactable = false;
+                createItemButton.interactable = false;
             }
 
-            foreach (TextMeshProUGUI amountText in _amountItemsTexts)
+            foreach (TextMeshProUGUI amountText in amountItemsTexts)
             {
                 amountText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
             }
@@ -96,11 +101,15 @@ public class TodoListManager : Singleton<TodoListManager>
             return;
         }
 
+        _amountListObjectsChecked++;
+        UpdateProgressBarUI();
         item.ChangeLineState(true);
         SaveJSON();
     }
     private void UncheckItem(TodoListObject item)
     {
+        _amountListObjectsChecked--;
+        UpdateProgressBarUI();
         item.ChangeLineState(false);
         SaveJSON();
     }
@@ -132,11 +141,13 @@ public class TodoListManager : Singleton<TodoListManager>
         _todoListObjects.Remove(item);
         if(_amountListObjects == _maxAmountListObjects)
         {
-            b_createItem.interactable = true;
+            createItemButton.interactable = true;
         }
         _amountListObjects--;
+        _amountListObjectsChecked--;
+        UpdateProgressBarUI();
         
-        foreach (TextMeshProUGUI amountText in _amountItemsTexts)
+        foreach (TextMeshProUGUI amountText in amountItemsTexts)
         {
             amountText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
         }
@@ -150,7 +161,7 @@ public class TodoListManager : Singleton<TodoListManager>
     // Initiates initial configurations for the input field
     private void InitInputField()
     {
-        _addInputField.characterLimit = _characterLimitName; // Sets the character limit input field
+        addInputField.characterLimit = _characterLimitName; // Sets the character limit input field
     }
     // Initiates initial configurations for the dropdown
     public void ConfigureDropdown()
@@ -162,20 +173,20 @@ public class TodoListManager : Singleton<TodoListManager>
             options.Add(new TMP_Dropdown.OptionData(topic.GetObjName()));
         }
 
-        _topicDropdown.options = options;
-        _topicDropdown.value = 0;
+        topicDropdown.options = options;
+        topicDropdown.value = 0;
     }
 
     // Checks if all the input fields have some form of text in them
     private bool IsInputFieldFilled()
     {
-        return _addInputField.text != "";
+        return addInputField.text != "";
     }
 
     // Clears the text present on the input fields
     private void ClearInputField()
     {
-        _addInputField.text = "";
+        addInputField.text = "";
     }
     
     // Shows a visual error to the player if any of the input fields hasn't been filled in
@@ -185,6 +196,8 @@ public class TodoListManager : Singleton<TodoListManager>
     }
 
     #endregion
+    
+    #region General UI Configure
     // Switches the panel mode (between adding an item or just showing the to-do list.
     public void SwitchMode(int mode)
     {
@@ -192,16 +205,35 @@ public class TodoListManager : Singleton<TodoListManager>
         {
             // To-do list normal show mode
             case 0:
-                _addPanel.SetActive(false);
+                addPanel.SetActive(false);
                 break;
             // To-do list adding item mode
             case 1:
                 ConfigureDropdown();
                 ClearInputField();
-                _addPanel.SetActive(true);
+                addPanel.SetActive(true);
                 break;
         }
     }
+
+    private void UpdateProgressBarUI()
+    {
+        if (_amountListObjects == 0)
+        {
+            progressBarObject.SetActive(false);
+            noTasksYetTextObject.SetActive(true);
+            return;
+        }
+        else if (_amountListObjects == 1)
+        {
+            noTasksYetTextObject.SetActive(false);
+            progressBarObject.SetActive(true);
+        }
+        float fillAmount = (float)_amountListObjectsChecked / _amountListObjects;
+        progressBarFillImage.fillAmount = fillAmount;
+    }
+    
+    #endregion
 
     #region JSON Data
 
@@ -214,6 +246,7 @@ public class TodoListManager : Singleton<TodoListManager>
     private void LoadJSONData()
     {
         _jsonManager.LoadTodoList();
+        UpdateProgressBarUI();
     }
 
     #endregion
