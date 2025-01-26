@@ -18,7 +18,7 @@ public class ButtonStatesAffectChildren : Button
     {
         base.DoStateTransition(state, instant);
 
-        if (_childrenImages.Length != 1)
+        if (_childrenImages != null)
         {
             if (state == SelectionState.Disabled)
             {

@@ -12,7 +12,7 @@ public class TodoListManager : Singleton<TodoListManager>
     [SerializeField] private Button b_addPanelClose;
     [SerializeField] private Button b_createItem;
     [SerializeField] private Button b_close;
-    [SerializeField] private TextMeshProUGUI _amountItemsText;
+    [SerializeField] private TextMeshProUGUI[] _amountItemsTexts;
     [SerializeField] private GameObject _todoListItemPrefab;
     [SerializeField] private TMP_InputField _addInputField;
     [SerializeField] private TMP_Dropdown _topicDropdown;
@@ -67,9 +67,12 @@ public class TodoListManager : Singleton<TodoListManager>
             {
                 b_createItem.interactable = false;
             }
+
+            foreach (TextMeshProUGUI amountText in _amountItemsTexts)
+            {
+                amountText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
+            }
             
-            _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
-                
             if (!isLoading)
             {
                 SaveJSON();
@@ -132,7 +135,12 @@ public class TodoListManager : Singleton<TodoListManager>
             b_createItem.interactable = true;
         }
         _amountListObjects--;
-        _amountItemsText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
+        
+        foreach (TextMeshProUGUI amountText in _amountItemsTexts)
+        {
+            amountText.text = _amountListObjects.ToString() + "/" + _maxAmountListObjects.ToString();
+        }
+        
         SaveJSON();
         Destroy(item.gameObject);
     }
