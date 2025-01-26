@@ -7,8 +7,8 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
 {
     private float _totalSeconds; // Total de segundos definido para um timer novo pelo usuário
     private float _secondsLeft; // Quantidade de segundos faltando para o timer terminar
-    
-    public TIMER_STATE timerState = TIMER_STATE.TIMER_OFF; // Estado atual do timer
+
+    private TIMER_STATE timerState { get; set; }  = TIMER_STATE.TIMER_OFF; // Estado atual do timer
     public UnityAction endTimerAction; // Ação que será chamada quando o tempo do timer terminar
 
     [SerializeField] private GameObject minimizedTimer; // Objeto do timer minimizado para poder controlá-lo
