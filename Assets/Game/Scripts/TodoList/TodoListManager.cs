@@ -67,7 +67,7 @@ public class TodoListManager : Singleton<TodoListManager>
             itemToggle.onValueChanged.AddListener(delegate { CheckItem(temp); });
         
             _amountListObjects++;
-            
+            UpdateProgressBarUI();
             if(_amountListObjects == 40)
             {
                 createItemButton.interactable = false;
@@ -246,7 +246,6 @@ public class TodoListManager : Singleton<TodoListManager>
     private void LoadJSONData()
     {
         _jsonManager.LoadTodoList();
-        UpdateProgressBarUI();
     }
 
     #endregion
