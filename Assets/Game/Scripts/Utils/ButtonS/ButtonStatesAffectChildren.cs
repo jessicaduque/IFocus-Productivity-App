@@ -17,28 +17,6 @@ public class ButtonStatesAffectChildren : Button
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
         base.DoStateTransition(state, instant);
-
-        if (_childrenImages != null)
-        {
-            if (state == SelectionState.Disabled)
-            {
-                foreach (Image im in _childrenImages)
-                {
-                    Color colorTest = im.color;
-                    colorTest.a = 0.5f;
-                    im.color = colorTest;
-                }
-            }
-            else if (state == SelectionState.Normal)
-            {
-                foreach (Image im in _childrenImages)
-                {
-                    Color colorTest = im.color;
-                    colorTest.a = 1f;
-                    im.color = colorTest;
-                }
-            }
-        }
         
         var targetColor =
             state == SelectionState.Disabled ? colors.disabledColor :
