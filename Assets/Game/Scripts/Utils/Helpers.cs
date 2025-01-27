@@ -4,7 +4,7 @@ using DG.Tweening;
 public static class Helpers
 {
     public static float blackFadeTime = 0.6f;
-    public static float panelFadeTime = 0.4f;
+    public static float panelFadeTime = 0.2f;
     public static Camera cam => Camera.main;
     public static int screenWidth => Screen.width;
     public static int screenHeight => Screen.height;

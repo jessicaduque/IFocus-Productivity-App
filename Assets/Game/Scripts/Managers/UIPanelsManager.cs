@@ -1,7 +1,7 @@
 using Utils.Singleton;
 using UnityEngine;
 using UnityEngine.Events;
-
+using DG.Tweening;
 public class UIPanelsManager : Singleton<UIPanelsManager>
 {
     [Header("UI Main Panels")]
@@ -11,25 +11,39 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
     [SerializeField] private GameObject musicPanel;
+
+    [Header("UI Images")] 
+    [SerializeField] private GameObject backgroundTransparencyObject;
+
+    private CanvasGroup _backgroundTransparencyCanvasGroup;
     
     [Header("UI Warning Panels")]
     [SerializeField] private GameObject deleteTopicWarningPanel;
+
+    private float _panelTime => Helpers.panelFadeTime;
     
-    public UnityAction backToMainPanel, alarmPanelActivated, computerScreenPanelActivated, todoListPanelActivated, 
-        studyTopicsPanelActivated, statisticsPanelActivated, musicPanelActivated;
-    
+    public UnityAction BackToMainPanelAction, AlarmPanelActivatedAction, ComputerScreenPanelActivatedAction, TodoListPanelActivatedAction, 
+        StudyTopicsPanelActivatedAction, StatisticsPanelActivatedAction, MusicPanelActivatedAction;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        computerScreenPanel.transform.localScale = Vector3.zero;
+        _backgroundTransparencyCanvasGroup = backgroundTransparencyObject.GetComponent<CanvasGroup>();
+    }
+
     #region Panel Controls
     public void ControlAlarmPanel(bool activate)
     {
         if (activate)
         {
             alarmPanel.SetActive(true);
-            alarmPanelActivated?.Invoke();
+            AlarmPanelActivatedAction?.Invoke();
         }
         else
         {
             alarmPanel.SetActive(false);
-            backToMainPanel?.Invoke();
+            BackToMainPanelAction?.Invoke();
         }
     }
     public void ControlComputerScreenPanel(bool activate)
@@ -37,12 +51,17 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             computerScreenPanel.SetActive(true);
-            computerScreenPanelActivated?.Invoke();
+            computerScreenPanel.transform.DOScale(1, _panelTime);
+            backgroundTransparencyObject.SetActive(true);
+            _backgroundTransparencyCanvasGroup.DOFade(1, _panelTime);
+            ComputerScreenPanelActivatedAction?.Invoke();
         }
         else
         {
-            computerScreenPanel.SetActive(false);
-            backToMainPanel?.Invoke();
+            computerScreenPanel.transform.DOScale(0, _panelTime).OnComplete(() => computerScreenPanel.SetActive(false));
+            backgroundTransparencyObject.SetActive(false);
+            _backgroundTransparencyCanvasGroup.DOFade(0, _panelTime);
+            BackToMainPanelAction?.Invoke();
         }
     }
     public void ControlTodoListPanel(bool activate)
@@ -50,7 +69,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             todoListPanel.SetActive(true);
-            todoListPanelActivated?.Invoke();
+            TodoListPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -62,7 +81,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             studyTopicsPanel.SetActive(true);
-            studyTopicsPanelActivated?.Invoke();
+            StudyTopicsPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -74,7 +93,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             statisticsPanel.SetActive(true);
-            statisticsPanelActivated?.Invoke();
+            StatisticsPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -86,7 +105,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             musicPanel.SetActive(true);
-            musicPanelActivated?.Invoke();
+            MusicPanelActivatedAction?.Invoke();
         }
         else
         {
