@@ -43,8 +43,8 @@ jobs:
       env:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}  # Get the Unity license from GitHub secrets
 
-     # Run Unity Unit Tests directly using Unity CLI (edit mode)
+    # Run Unity Unit Tests directly using Unity CLI (edit mode)
     - name: Run Unity Unit Tests
       run: |
         # Explicitly reference the Unity executable path if it isn't in the PATH
-        "C:\Program Files\Unity\Hub\Editor\2022.3.30f1\Editor\Unity.exe" -batchmode -nographics -runTests -testPlatform editmode -projectPath . -logfile test_results.log
+        Start-Process -FilePath "C:\Program Files\Unity\Hub\Editor\2022.3.30f1\Editor\Unity.exe" -ArgumentList "-batchmode", "-nographics", "-runTests", "-testPlatform", "editmode", "-projectPath", ".", "-logfile", "test_results.log" -Wait
