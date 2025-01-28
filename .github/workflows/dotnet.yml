@@ -8,7 +8,7 @@ on:
 
 jobs:
   unity-tests:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     # Check out the repository
@@ -33,12 +33,15 @@ jobs:
         & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless install --version 2022.3.30f1
     
 
-    # Activate Unity license
     - name: Activate Unity License
-      uses: game-ci/unity-activate@v2
-      with:
-        unitySerial: ${{ secrets.UNITY_LICENSE }}
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Create the license directory if it doesn't exist
+        mkdir -p "$HOME/.config/unity3d"
+        
+        # Save the Unity license to the required location
+        echo "$UNITY_LICENSE" > $HOME/.config/unity3d/Unity_lic.ulf
+      env:
+        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}  # Get the Unity license from GitHub secrets
 
     # Run Unity unit tests
     - name: Run Unity Unit Tests
