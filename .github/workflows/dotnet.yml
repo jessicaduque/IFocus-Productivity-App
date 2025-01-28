@@ -8,7 +8,7 @@ on:
 
 jobs:
   unity-tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     # Check out the repository
