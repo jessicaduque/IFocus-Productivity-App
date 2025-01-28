@@ -43,9 +43,7 @@ jobs:
       env:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}  # Get the Unity license from GitHub secrets
 
-    # Run Unity unit tests
+    # Run Unity Unit Tests directly using Unity CLI
     - name: Run Unity Unit Tests
-      uses: game-ci/unity-test-runner@v2
-      with:
-        testMode: editmode  # Run Edit Mode tests
-        artifactsPath: artifacts/test-results  # Where test results will be saved
+      run: |
+        unity -batchmode -nographics -runTests -testPlatform editmode -projectPath . -logfile test_results.log
