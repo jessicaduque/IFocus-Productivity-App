@@ -24,12 +24,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-unity-
 
-    # Install Unity for Android
-    - name: Setup Unity
-      uses: game-ci/unity-setup@v2
-      with:
-        version: 2022.3.30f1 # Replace with your Unity version
-        components: android  # Installs Unity with Android Build Support
+    # Install Unity Hub CLI (and Unity version)
+    - name: Install Unity via Unity Hub CLI
+      run: |
+        # Download Unity Hub installer
+        Invoke-WebRequest -Uri https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe -OutFile UnityHubSetup.exe
+        Start-Process -FilePath UnityHubSetup.exe -ArgumentList '/S' -Wait
+        & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless install --version 2022.3.30f1
+    
 
     # Activate Unity license
     - name: Activate Unity License
