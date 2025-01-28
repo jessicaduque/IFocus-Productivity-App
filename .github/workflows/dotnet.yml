@@ -45,16 +45,6 @@ jobs:
 
     # Run Unity Unit Tests directly using Unity Hub CLI (edit mode)
     - name: Run Unity Unit Tests using Unity Hub CLI
-      run: |
-        & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless run --projectPath . --batchmode --nographics --runTests --testPlatform editmode --logfile ./test_results.log
-
-    # List directory contents to debug (make sure test_results.log exists)
-    - name: List directory contents
-      run: dir
-
-    # Upload Test Results
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: game-ci/unity-test-runner@v2
       with:
-        name: unity-test-results
-        path: ./test_results.log
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
