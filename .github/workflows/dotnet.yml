@@ -15,40 +15,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Cache Unity installation
-    - name: Cache Unity
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/unity3d
-        key: ${{ runner.os }}-unity-${{ github.ref }}
-        restore-keys: |
-          ${{ runner.os }}-unity-
-
-    # Install Unity via Unity Hub CLI
-    - name: Install Unity via Unity Hub CLI
-      run: |
-        # Download Unity Hub installer
-        Invoke-WebRequest -Uri https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe -OutFile UnityHubSetup.exe
-        Start-Process -FilePath UnityHubSetup.exe -ArgumentList '/S' -Wait
-        & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless install --version 2022.3.30f1
-    
-    # Activate Unity License
-    - name: Activate Unity License
-      run: |
-        # Create the license directory if it doesn't exist
-        mkdir -p "$HOME/.config/unity3d"
-        
-        # Save the Unity license to the required location
-        echo "$UNITY_LICENSE" > $HOME/.config/unity3d/Unity_lic.ulf
-      env:
-        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}  # Get the Unity license from GitHub secrets
-
-    # Run Unity Unit Tests directly using Unity Hub CLI (edit mode)
-    - name: Run Unity Unit Tests using Unity Hub CLI
+    # Run Unity Unit Tests using Unity Test Runner
+    - name: Run Unity Unit Tests
       uses: game-ci/unity-test-runner@v4
+      with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
+        unityVersion: 2022.3.30f1
+        testMode: editmode
+        artifactsPath: test-results
       env:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
