@@ -47,3 +47,9 @@ jobs:
     - name: Run Unity Unit Tests using Unity Hub CLI
       run: |
         & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless run --projectPath . --batchmode --nographics --runTests --testPlatform editmode --logfile test_results.log
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: unity-test-results
+        path: test_results.log
