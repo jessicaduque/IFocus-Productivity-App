@@ -24,7 +24,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-unity-
 
-    # Install Unity Hub CLI (and Unity version)
+    # Install Unity via Unity Hub CLI
     - name: Install Unity via Unity Hub CLI
       run: |
         # Download Unity Hub installer
@@ -32,7 +32,7 @@ jobs:
         Start-Process -FilePath UnityHubSetup.exe -ArgumentList '/S' -Wait
         & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless install --version 2022.3.30f1
     
-
+    # Activate Unity License
     - name: Activate Unity License
       run: |
         # Create the license directory if it doesn't exist
@@ -43,8 +43,7 @@ jobs:
       env:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}  # Get the Unity license from GitHub secrets
 
-    # Run Unity Unit Tests directly using Unity CLI (edit mode)
-    - name: Run Unity Unit Tests
+    # Run Unity Unit Tests directly using Unity Hub CLI (edit mode)
+    - name: Run Unity Unit Tests using Unity Hub CLI
       run: |
-        # Explicitly reference the Unity executable path if it isn't in the PATH
-        Start-Process -FilePath "C:\Program Files\Unity\Hub\Editor\2022.3.30f1\Editor\Unity.exe" -ArgumentList "-batchmode", "-nographics", "-runTests", "-testPlatform", "editmode", "-projectPath", ".", "-logfile", "test_results.log" -Wait
+        & "C:\Program Files\Unity Hub\Unity Hub.exe" --headless run --projectPath . --batchmode --nographics --runTests --testPlatform editmode --logfile test_results.log
