@@ -246,6 +246,7 @@ public class TodoListManager : Singleton<TodoListManager>
     private void LoadJSONData()
     {
         _jsonManager.LoadTodoList();
+        UpdateProgressBarUI();
     }
 
     #endregion
