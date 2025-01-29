@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7f745165029a0b34f89926e040b54148
+guid: 1b9272d2e103b5442b374fcdff7ca2b4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatScratcher_0
+      name: Cat_Animation-Sheet_0
       rect:
         serializedVersion: 2
-        x: 38
-        y: 24
-        width: 121
-        height: 122
+        x: 0
+        y: 0
+        width: 53
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,8 +137,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c860872d1a04d59409c9a458bb460868
-      internalID: -423213874
+      spriteID: ed7a2a482eede09429521e278ba71eea
+      internalID: -1936869450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat_Animation-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 0
+        width: 53
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44aed427d1bdf2242b2312fa1d6d1d1f
+      internalID: 101484906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat_Animation-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 0
+        width: 53
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3c53b19ec86fbf4aab110aab9570999
+      internalID: 871739381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat_Animation-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 0
+        width: 53
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60dc66a39200620428f2dbfad5f158f2
+      internalID: -1393985224
       vertices: []
       indices: 
       edges: []
@@ -154,7 +217,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CatScratcher_0: -423213874
+      Cat_Animation-Sheet_0: -1936869450
+      Cat_Animation-Sheet_1: 101484906
+      Cat_Animation-Sheet_2: 871739381
+      Cat_Animation-Sheet_3: -1393985224
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
