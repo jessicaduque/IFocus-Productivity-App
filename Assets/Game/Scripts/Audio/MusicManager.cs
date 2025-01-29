@@ -42,7 +42,7 @@ namespace Game.Scripts.Audio
             if (_isMusicPlaying && _musicQueue.Count > 0)
             {
                 SoundSO nextMusic = _musicQueue.Dequeue();
-                _audioManager.PlayMusic(nextMusic.soundName, nextMusic.clip, nextMusic.volume, nextMusic.pitch, nextMusic.loop);
+                _audioManager.PlayMusic(nextMusic.soundName);
                 Invoke(nameof(StopAndPlayNextMusic), nextMusic.timeSeconds);
             }
         }

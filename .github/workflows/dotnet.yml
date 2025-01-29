@@ -25,4 +25,5 @@ jobs:
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
         testMode: editmode
+        unityVersion: 2022.3.30f1
         artifactsPath: test-results
