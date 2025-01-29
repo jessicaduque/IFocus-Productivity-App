@@ -27,7 +27,7 @@ jobs:
         testMode: editmode
         unityVersion: 2022.3.30f1
         artifactsPath: test-results
-    - Store Test Results
+    - name: Store Test Results
       uses: game-ci/unity-test-runner@v4
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
