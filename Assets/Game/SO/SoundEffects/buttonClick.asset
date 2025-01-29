@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
   m_Name: buttonClick
   m_EditorClassIdentifier: 
-  soundName: buttonClick
+  soundName: buttonclick
   clip: {fileID: 8300000, guid: ce3f3bec95420594dafca68b58e03e88, type: 3}
   loop: 0
   volume: 1
   pitch: 1
+  timeSeconds: 0
