@@ -3,17 +3,17 @@ using UnityEngine.UI;
 
 public class ButtonStatesAffectChildren : Button
 {
-    private Image[] _childrenImages;
     protected Graphic[] _graphics;
-
+    
+#if UNITY_EDITOR
     protected override void OnValidate()
     {
         base.OnValidate();
-
-        _childrenImages = GetComponentsInChildren<Image>();
+    
         _graphics = GetComponentsInChildren<Graphic>();
     }
-
+#endif
+    
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
         base.DoStateTransition(state, instant);
