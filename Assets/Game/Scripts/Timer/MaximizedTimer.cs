@@ -1,10 +1,12 @@
+using System.Collections;
 using DG.Tweening;
 using Game.Scripts.Audio;
-using TMPro; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
+using TMPro;
+using Unity.VisualScripting; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.UI; // Biblioteca padrão da Unity para manipulação de componentes de UI
-using Utils.Singleton; // Script de Singleton criado para herdar e ser chamado com facilidade
-public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um singleton pois apenas um timer maximizado irá existir no projeto, então será mais fácil acessá-lo de outras classes
+using Sequence = DG.Tweening.Sequence; // Script de Singleton criado para herdar e ser chamado com facilidade
+public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta classe é um singleton pois apenas um timer maximizado irá existir no projeto, então será mais fácil acessá-lo de outras classes
 {
     [Header("UI Components")] // Componentes de UI para controlar o timer maximizado
     [SerializeField] private GameObject setTimerText;
@@ -66,7 +68,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
             PlayUI();
         }
 
-        AnimationOpen();
+        StartCoroutine(AnimationOpen());
     }
     // Método default da Unity que roda toda vez que o objeto ligado ao script é desativado
     private void OnDisable()
@@ -252,17 +254,23 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     
     #region Animations
 
-    private void AnimationOpen()
+    private IEnumerator AnimationOpen()
     {
-        sequenceOpen = DOTween.Sequence();
-
-        sequenceOpen.Join(mainTimerObjectTransform.DOPunchPosition(Vector3.up * 10, _animationsTime * 3, 5, 0).SetEase(Ease.InOutBounce));
         exitButton.transform.localScale = Vector3.zero;
+        mainTimerObjectTransform.localScale = Vector3.one;
+        
+        yield return new WaitForNextFrameUnit();
+        
+        sequenceOpen = DOTween.Sequence();
+        
+        sequenceOpen.Join(mainTimerObjectTransform.DOPunchPosition(Vector3.up * 10, _animationsTime * 3, 5, 0).SetEase(Ease.InOutBounce));
+        
         float time = 0;
         for (int indexButton = 0; indexButton < possibleButtonsTransforms.Length; indexButton++)
         {
             if (possibleButtonsTransforms[indexButton].gameObject.activeSelf)
             {
+                possibleButtonsTransforms[indexButton].localScale = Vector3.one;
                 sequenceOpen.Insert(time, possibleButtonsTransforms[indexButton].DOPunchPosition(Vector3.up * 10, _animationsTime * 2, 5, 0).SetEase(Ease.InOutBounce));
                 time += _animationsTime / 2;
             }
@@ -274,6 +282,20 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     private void AnimationClose()
     {
         sequenceClose = DOTween.Sequence();
+        
+        sequenceClose.Join(mainTimerObjectTransform.DOScale(0, _animationsTime));
+        
+        foreach (var buttonTransform in possibleButtonsTransforms)
+        {
+            if (buttonTransform.gameObject.activeSelf)
+            {
+                sequenceClose.Join(buttonTransform.DOScale(0, _animationsTime));
+            }
+        }
+
+        sequenceClose.Join(exitButton.transform.DOScale(0, _animationsTime));
+
+        sequenceClose.OnComplete(delegate {gameObject.SetActive(false);});
     }
     
     #endregion

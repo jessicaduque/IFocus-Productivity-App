@@ -2,10 +2,12 @@ using Utils.Singleton;
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
+
 public class UIPanelsManager : Singleton<UIPanelsManager>
 {
     [Header("UI Main Panels")]
-    [SerializeField] private GameObject alarmPanel;
+    [SerializeField] private GameObject timerPanel;
+    private MaximizedTimer _maximizedTimer;
     [SerializeField] private GameObject computerScreenPanel;
     [SerializeField] private GameObject todoListPanel;
     [SerializeField] private GameObject studyTopicsPanel;
@@ -39,6 +41,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         // Getting private variables
         _backgroundTransparencyCanvasGroup = backgroundTransparencyObject.GetComponent<CanvasGroup>();
         _deleteTopicWarningManager = deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>();
+        _maximizedTimer = timerPanel.GetComponent<MaximizedTimer>();
     }
 
     #region Panel Controls
@@ -46,12 +49,12 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     {
         if (activate)
         {
-            alarmPanel.SetActive(true);
+            timerPanel.SetActive(true);
             AlarmPanelActivatedAction?.Invoke();
         }
         else
         {
-            alarmPanel.SetActive(false);
+            _maximizedTimer.ClosePanel();
             BackToMainPanelAction?.Invoke();
         }
     }

@@ -1863,7 +1863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7887a34e41568e743aa24ff79f9363f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alarmPanel: {fileID: 1820046796}
+  timerPanel: {fileID: 1820046796}
   computerScreenPanel: {fileID: 498911594}
   todoListPanel: {fileID: 221890993}
   studyTopicsPanel: {fileID: 317768535}
