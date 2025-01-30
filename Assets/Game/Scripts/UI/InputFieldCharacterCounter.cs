@@ -12,7 +12,7 @@ public class InputFieldCharacterCounter : MonoBehaviour
     {
         thisText = GetComponent<TextMeshProUGUI>();
         thisInputField.characterLimit = maxAmountCharacters;
-        associatedButton.interactable = false;
+        
         thisInputField.onValueChanged.AddListener(delegate
         {
             int amountCharacter = thisInputField.text.Length;
@@ -20,6 +20,11 @@ public class InputFieldCharacterCounter : MonoBehaviour
             if (associatedButton == null) return;
             associatedButton.interactable = amountCharacter != 0;
         });
+    }
+
+    private void Start()
+    {
+        associatedButton.interactable = false;
     }
 
     private void OnEnable()

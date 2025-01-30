@@ -32,7 +32,6 @@ public class DisplayDateUI : MonoBehaviour
 
     private void OnEnable()
     {
-
         int num_month = System.DateTime.Now.Month;
         int num_day = System.DateTime.Now.Day;
 

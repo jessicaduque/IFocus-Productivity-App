@@ -4,17 +4,15 @@ using UnityEngine.UI;
 public class ButtonStatesAffectChildren : Button
 {
     protected Graphic[] _graphics;
-    
-#if UNITY_EDITOR
-    protected override void OnValidate()
+
+    protected override void Awake()
     {
-        base.OnValidate();
-    
+        base.Awake();
+        
         _graphics = GetComponentsInChildren<Graphic>();
     }
-#endif
-    
-    protected override void DoStateTransition(SelectionState state, bool instant)
+
+protected override void DoStateTransition(SelectionState state, bool instant)
     {
         base.DoStateTransition(state, instant);
         
@@ -24,10 +22,13 @@ public class ButtonStatesAffectChildren : Button
             state == SelectionState.Normal ? colors.normalColor :
             state == SelectionState.Pressed ? colors.pressedColor :
             state == SelectionState.Selected ? colors.selectedColor : Color.white;
-        
-        for (int i = 1; i < _graphics.Length; i++)
+
+        if (_graphics != null)
         {
-            _graphics[i].CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
+            for (int i = 1; i < _graphics.Length; i++)
+            {
+                _graphics[i].CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
+            }
         }
     }
 }
