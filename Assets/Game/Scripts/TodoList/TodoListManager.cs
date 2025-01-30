@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Scripts.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -29,6 +30,7 @@ public class TodoListManager : Singleton<TodoListManager>
     private JSONManager _jsonManager => JSONManager.I;
     private StudyTopicsManager _studyTopicsManager => StudyTopicsManager.I; 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
+    private AudioManager _audioManager => AudioManager.I;
 
     protected override void Awake()
     {
@@ -95,6 +97,8 @@ public class TodoListManager : Singleton<TodoListManager>
     // Checks an item on the list. With that, it is deleted from the list.
     private void CheckItem(TodoListObject item)
     {
+        _audioManager.PlaySfx("scribble");
+        
         if (item.isChecked)
         {
             UncheckItem(item);

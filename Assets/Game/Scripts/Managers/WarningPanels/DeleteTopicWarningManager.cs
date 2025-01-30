@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Game.Scripts.Audio;
 using TMPro;
 
 public class DeleteTopicWarningManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class DeleteTopicWarningManager : MonoBehaviour
     private float _panelTime => Helpers.panelFadeTime;
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I;
     private StudyTopicsManager _studyTopicsManager => StudyTopicsManager.I;
+    private AudioManager _audioManager => AudioManager.I;
     private void Awake()
     {
         SetupButtons();
@@ -22,6 +24,8 @@ public class DeleteTopicWarningManager : MonoBehaviour
 
     private void OnEnable()
     {
+        _audioManager.PlaySfx("panelWarning");
+        
         transform.localScale = Vector3.one;
         foreach (Transform panelTransform in imagesForAnimationOn)
         {
