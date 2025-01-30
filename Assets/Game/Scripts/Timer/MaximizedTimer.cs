@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Game.Scripts.Audio;
 using TMPro; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.UI; // Biblioteca padrão da Unity para manipulação de componentes de UI
@@ -34,7 +35,7 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I; // Pegar o singleton do UIPanelsManager para controlar o painel de timer maximizado
     private TimerManager _timerManager; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
-    
+    private AudioManager _audioManager => AudioManager.I;
     // Método default da Unity que roda uma única vez quando um objeto ativo está sendo carregado 
     private new void Awake()
     {
@@ -45,7 +46,10 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     // Método default da Unity que roda toda vez que o objeto ligado ao script é ativado
     private void OnEnable()
     {
-        _timerManager.endTimerAction += InitialUI; // Inscreve a método de UI na ação de fim de timer para atualizar a UI ao estado primário dele
+        _timerManager.endTimerAction += delegate { 
+            _audioManager.PlaySfx("timerEnd");
+            InitialUI();
+        }; // Inscreve a método de UI na ação de fim de timer para atualizar a UI ao estado primário dele e tocar o som de fim de timer
 
         if (_timerManager.GetTimerState() == TIMER_STATE.TIMER_OFF)// Se o timer estiver no estado desligado, atualiza a UI à seu estado primário
         {
@@ -67,7 +71,10 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     // Método default da Unity que roda toda vez que o objeto ligado ao script é desativado
     private void OnDisable()
     {
-        _timerManager.endTimerAction -= InitialUI; // Desinscreve a método de UI inicial à ação de fim de timer para ele não ser chamado  se o painel está desativado
+        _timerManager.endTimerAction -= delegate { 
+            _audioManager.PlaySfx("timerEnd");
+            InitialUI();
+        }; // Desinscreve a método de UI inicial à ação de fim de timer para ele não ser chamado  se o painel está desativado
     }
     // Método para setar o total de segundos qunando um timer novo é definido
     private void SetTotalSeconds()

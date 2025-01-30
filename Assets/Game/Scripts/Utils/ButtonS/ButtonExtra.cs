@@ -1,29 +1,40 @@
 using System.Collections;
+using Game.Scripts.Audio;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ButtonExtra : MonoBehaviour
 {
-    private Button _thisButton;
-
-    [SerializeField] private bool sensitiveToTransparency = true;
+    [SerializeField]private Button thisButton;
+    [SerializeField] private bool sensitiveToTransparency;
     [SerializeField] private string soundEffectName = "buttonClick";
     private AudioManager _audioManager => AudioManager.I;
+    
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (thisButton == null)
+        {
+            thisButton = GetComponent<Button>();
+        }
+    }
+
+#endif
 
     private void Awake()
     {
-        _thisButton = GetComponent<Button>();
-        _thisButton.onClick.AddListener(MakeSound);
+        thisButton.onClick.AddListener(MakeSound);
     }
 
     private void Start()
     {
-        if(sensitiveToTransparency) _thisButton.targetGraphic.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
+        if(sensitiveToTransparency) thisButton.targetGraphic.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
     }
 
     private void OnEnable()
     {
-        _thisButton.enabled = true;
+        thisButton.enabled = true;
     }
 
     private void OnDisable()
@@ -34,14 +45,14 @@ public class ButtonExtra : MonoBehaviour
     private void MakeSound()
     {
         _audioManager.PlaySfx(soundEffectName);
-        _thisButton.enabled = false;
+        thisButton.enabled = false;
         if(isActiveAndEnabled) StartCoroutine(Reset());
     }        
 
     IEnumerator Reset()
     {
         yield return new WaitForSeconds(0.1f);
-        _thisButton.enabled = true;
+        thisButton.enabled = true;
     }
 
 }

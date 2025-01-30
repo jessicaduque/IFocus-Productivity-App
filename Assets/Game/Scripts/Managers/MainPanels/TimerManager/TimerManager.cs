@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.Events; // Biblioteca padrão da Unity para manipulação de eventos da Unity
-//using Utils.Singleton; // Script de Singleton criado para herdar e ser chamado com facilidade
-public class TimerManager : MonoBehaviour // Esta classe é um singleton pois serve de controlador principal do timer e é o único a existir no projeto, então será mais fácil acessá-lo de outras classes
+public class TimerManager : MonoBehaviour 
 {
     private float _totalSeconds; // Total de segundos definido para um timer novo pelo usuário
     private float _secondsLeft; // Quantidade de segundos faltando para o timer terminar
@@ -12,9 +11,9 @@ public class TimerManager : MonoBehaviour // Esta classe é um singleton pois se
     public UnityAction endTimerAction; // Ação que será chamada quando o tempo do timer terminar
 
     [SerializeField] private GameObject minimizedTimer; // Objeto do timer minimizado para poder controlá-lo
-
+    
     #region Unity Default Methods
-    protected new void Awake()
+    private void Awake()
     {
         LoadTimerInfo();
     }

@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 9150400063572032813}
   - component: {fileID: 454198611461860409}
   m_Layer: 5
-  m_Name: b_delete
+  m_Name: delete_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,8 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacc87fcdcd26bd4db28676efc3f4b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisButton: {fileID: 9150400063572032813}
   sensitiveToTransparency: 0
-  soundEffectName: buttonclick
+  soundEffectName: mouseClick
 --- !u!1 &3495823385259232008
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +475,7 @@ GameObject:
   - component: {fileID: 6169063776291519469}
   - component: {fileID: 7741784777201063953}
   m_Layer: 5
-  m_Name: b_edit
+  m_Name: edit_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -593,8 +594,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacc87fcdcd26bd4db28676efc3f4b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisButton: {fileID: 6169063776291519469}
   sensitiveToTransparency: 0
-  soundEffectName: buttonclick
+  soundEffectName: mouseClick
 --- !u!1 &5129943196393981077
 GameObject:
   m_ObjectHideFlags: 0

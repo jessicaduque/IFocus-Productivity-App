@@ -208,8 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacc87fcdcd26bd4db28676efc3f4b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisButton: {fileID: 9150400063572032813}
   sensitiveToTransparency: 0
-  soundEffectName: buttonclick
+  soundEffectName: mouseClick
 --- !u!1 &2337525421796910929
 GameObject:
   m_ObjectHideFlags: 0
