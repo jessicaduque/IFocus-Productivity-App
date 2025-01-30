@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro; // Biblioteca comum da Unity para manipulação de componentes de UI referentes ao tipo de texto mais atualizado e recomendado para uso
 using UnityEngine; // Biblioteca padrão da Unity para manipulação de questões básicas da engine
 using UnityEngine.UI; // Biblioteca padrão da Unity para manipulação de componentes de UI
@@ -23,8 +24,13 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
     [SerializeField] private TextMeshProUGUI minutesText;
     [SerializeField] private TextMeshProUGUI secondsText;
 
-    private float _totalSeconds
-        ; // Total de segundos do timer quando é definido 
+    [Header("Animations")] 
+    [SerializeField] private Transform mainTimerObjectTransform; 
+    [SerializeField] private Transform[] possibleButtonsTransforms = new Transform[4]; 
+    private Sequence sequenceOpen, sequenceClose;
+    private float _animationsTime => Helpers.panelFadeTime;
+    
+    private float _totalSeconds; // Total de segundos do timer quando é definido 
 
     private UIPanelsManager _uiPanelsManager => UIPanelsManager.I; // Pegar o singleton do UIPanelsManager para controlar o painel de timer maximizado
     private TimerManager _timerManager; // Pegar o singleton do TimerManager que controla dados sobre o timer, principalmente considerando quando o painel de TimerMaximizado estará inativo
@@ -55,6 +61,8 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
             _totalSeconds = _timerManager.GetTotalSeconds();
             PlayUI();
         }
+
+        AnimationOpen();
     }
     // Método default da Unity que roda toda vez que o objeto ligado ao script é desativado
     private void OnDisable()
@@ -207,6 +215,11 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
         quitButton.interactable = activated;
         resumeButton.interactable = activated;
     }
+
+    public void ClosePanel()
+    {
+        AnimationClose();
+    }
     
     #endregion
     
@@ -228,6 +241,34 @@ public class MaximizedTimer : Singleton<MaximizedTimer> // Esta classe é um sin
         }
     }
 
+    #endregion
+    
+    #region Animations
+
+    private void AnimationOpen()
+    {
+        sequenceOpen = DOTween.Sequence();
+
+        sequenceOpen.Join(mainTimerObjectTransform.DOPunchPosition(Vector3.up * 10, _animationsTime * 3, 5, 0).SetEase(Ease.InOutBounce));
+        exitButton.transform.localScale = Vector3.zero;
+        float time = 0;
+        for (int indexButton = 0; indexButton < possibleButtonsTransforms.Length; indexButton++)
+        {
+            if (possibleButtonsTransforms[indexButton].gameObject.activeSelf)
+            {
+                sequenceOpen.Insert(time, possibleButtonsTransforms[indexButton].DOPunchPosition(Vector3.up * 10, _animationsTime * 2, 5, 0).SetEase(Ease.InOutBounce));
+                time += _animationsTime / 2;
+            }
+        }
+
+        sequenceOpen.Insert(_animationsTime / 2, exitButton.transform.DOScale(1, _animationsTime));
+    }
+    
+    private void AnimationClose()
+    {
+        sequenceClose = DOTween.Sequence();
+    }
+    
     #endregion
     
 }

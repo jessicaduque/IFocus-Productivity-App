@@ -10,15 +10,21 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [SerializeField] private GameObject todoListPanel;
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
+    
+    [Header("AINDA NÃO IMPLEMENTADO")]
     [SerializeField] private GameObject musicPanel;
 
     [Header("UI Images")] 
     [SerializeField] private GameObject backgroundTransparencyObject;
 
     private CanvasGroup _backgroundTransparencyCanvasGroup;
-    
-    [Header("UI Warning Panels")]
+
+    [Header("UI Warning Panels")] 
+    [SerializeField] private GameObject blurCamera;
+    [Header("Delete Panel")]
     [SerializeField] private GameObject deleteTopicWarningPanel;
+
+    private DeleteTopicWarningManager _deleteTopicWarningManager;
 
     private float _panelTime => Helpers.panelFadeTime;
     
@@ -29,7 +35,10 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     {
         base.Awake();
         computerScreenPanel.transform.localScale = Vector3.zero;
+        
+        // Getting private variables
         _backgroundTransparencyCanvasGroup = backgroundTransparencyObject.GetComponent<CanvasGroup>();
+        _deleteTopicWarningManager = deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>();
     }
 
     #region Panel Controls
@@ -118,9 +127,16 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
 
     public void ControlDeleteTopicWarningPanel(bool activate, string deleteName="")
     {
-        deleteTopicWarningPanel?.SetActive(activate);
-        deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>().SetDeleteTopicName(deleteName);
-
+        if (activate)
+        {
+            deleteTopicWarningPanel.SetActive(true);
+            _deleteTopicWarningManager.SetDeleteTopicName(deleteName);
+        }
+        else
+        {
+            _deleteTopicWarningManager.ClosePanel();
+        }
+        blurCamera.SetActive(activate);
     }
     
     #endregion
