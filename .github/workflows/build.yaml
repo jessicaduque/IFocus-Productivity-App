@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - Android # Build an Android .apk standalone app.
+          - Android
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,7 +30,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-      - uses: actions/upload-artifact@v3
+      - name: Generate Build Name
+        run: echo "BUILD_NAME=iFocus-$(date +%Y%m%d%H%M%S | md5sum | cut -c1-8)" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ matrix.targetPlatform }}
+          name: ${{ env.BUILD_NAME }}
           path: build/${{ matrix.targetPlatform }}
