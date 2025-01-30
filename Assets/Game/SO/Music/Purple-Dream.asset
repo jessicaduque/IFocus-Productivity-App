@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
-  m_Name: NomeMusica
+  m_Name: Purple-Dream
   m_EditorClassIdentifier: 
-  soundName: Nome Musica
+  soundName: Purple-Dream
   clip: {fileID: 8300000, guid: 6dad81371a3267a43bc43918761f11a4, type: 3}
   loop: 0
   volume: 1
