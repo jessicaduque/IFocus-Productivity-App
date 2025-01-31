@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
   m_Name: catMeow
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: catMeow
+  clip: {fileID: 8300000, guid: fdd6b37d35ed13a44a5582a953de1a4a, type: 3}
   loop: 0
-  volume: 0
-  pitch: 0.1
+  volume: 1
+  pitch: 1
   timeSeconds: 0
