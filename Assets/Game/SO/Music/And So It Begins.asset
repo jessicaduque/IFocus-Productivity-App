@@ -15,6 +15,6 @@ MonoBehaviour:
   soundName: 
   clip: {fileID: 0}
   loop: 0
-  volume: 0
-  pitch: 0.1
+  volume: 1
+  pitch: 1
   timeSeconds: 0

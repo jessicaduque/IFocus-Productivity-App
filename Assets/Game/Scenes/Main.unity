@@ -796,6 +796,10 @@ PrefabInstance:
       propertyPath: m_Colors.m_DisabledColor.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 544402147401154929, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000015
+      objectReference: {fileID: 0}
     - target: {fileID: 715306745322276053, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
       propertyPath: m_Name
       value: MainComputerPopup
@@ -1113,7 +1117,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: 135}
+  m_AnchoredPosition: {x: -10, y: 135.00002}
   m_SizeDelta: {x: 140, y: 196}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &80807307
@@ -2887,6 +2891,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 221890994}
     m_Modifications:
+    - target: {fileID: 544402147401154929, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000015
+      objectReference: {fileID: 0}
     - target: {fileID: 715306745322276053, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
       propertyPath: m_Name
       value: TodoListAddPopup
@@ -7719,6 +7727,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1b40d04912b3a2045918360d740c6a10, type: 2}
   - {fileID: 11400000, guid: 3663b7af51cbd0744a45188b92ca0769, type: 2}
   - {fileID: 11400000, guid: 64fd7cd22c2e9d441bccc303273d0268, type: 2}
+  - {fileID: 11400000, guid: d086379a9b943f94599eddf92fb1850c, type: 2}
 --- !u!1 &865796038
 GameObject:
   m_ObjectHideFlags: 0
@@ -9968,7 +9977,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 19.999985, y: 0}
+  m_AnchoredPosition: {x: 20, y: 0}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1031376392
@@ -10652,6 +10661,8 @@ GameObject:
   - component: {fileID: 1147462386}
   - component: {fileID: 1147462385}
   - component: {fileID: 1147462383}
+  - component: {fileID: 1147462388}
+  - component: {fileID: 1147462387}
   m_Layer: 5
   m_Name: Cat_Image
   m_TagString: Untagged
@@ -10737,6 +10748,64 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147462381}
   m_CullTransparentMesh: 1
+--- !u!114 &1147462387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147462381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ee4a1d9ba78d443901cd3c79d4288c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisButton: {fileID: 1147462388}
+  soundEffectName: catMeow
+--- !u!114 &1147462388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147462381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1147462385}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1187964095
 GameObject:
   m_ObjectHideFlags: 0
@@ -10922,6 +10991,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 317768536}
     m_Modifications:
+    - target: {fileID: 544402147401154929, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000015
+      objectReference: {fileID: 0}
     - target: {fileID: 715306745322276053, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
       propertyPath: m_Name
       value: StudyTopicsPopup
@@ -11131,6 +11204,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 221890994}
     m_Modifications:
+    - target: {fileID: 544402147401154929, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000015
+      objectReference: {fileID: 0}
     - target: {fileID: 715306745322276053, guid: b1f09c13ffa127f44996f45815937d58, type: 3}
       propertyPath: m_Name
       value: TodoListPopup
