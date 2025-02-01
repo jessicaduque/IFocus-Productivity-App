@@ -1,7 +1,6 @@
 using System.Collections;
 using Game.Scripts.Audio;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ButtonExtra : MonoBehaviour
