@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
-  m_Name: Still Awake
+  m_Name: Silent_Wood
   m_EditorClassIdentifier: 
-  soundName: Still Awake
-  clip: {fileID: 8300000, guid: 4dd40ff5111533a48b486ea72f35caa7, type: 3}
+  soundName: Silent Wood
+  clip: {fileID: 8300000, guid: e68bff0e0ec4ff74fabd40d4fca3052c, type: 3}
   loop: 0
   volume: 1
   pitch: 1
-  timeSeconds: 168
+  timeSeconds: 187

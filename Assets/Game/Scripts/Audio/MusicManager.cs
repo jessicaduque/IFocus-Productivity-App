@@ -1,35 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Utils.Singleton;
+using UnityEngine.UI;
 
 namespace Game.Scripts.Audio
 {
     public class MusicManager : MonoBehaviour
     {
+        [Header("UI Elements")]
+        [SerializeField] private Button _playButton;
+        [SerializeField] private Button _pauseButton;
+        [SerializeField] private Button _nextSongButton;
+        [SerializeField] private Button _previousSongButton;
         [Header("Music List")]
-        [SerializeField] private List<SoundSO> musicList = new List<SoundSO>();
-
+        private List<SoundSO> musicList = new List<SoundSO>();
         private Queue<SoundSO> _musicQueue = new Queue<SoundSO>();
         private AudioManager _audioManager => AudioManager.I;
         private bool _isMusicPlaying = true;
 
         private void Start()
         {
-            SoundSO[] allSounds = Resources.LoadAll<SoundSO>("???");
-            musicList.AddRange(allSounds);
-
-            foreach (var music in musicList)
-            {
-                _musicQueue.Enqueue(music);
-            }
-
-            if (_musicQueue.Count > 0)
-            {
-                PlayNextMusic();
-            }
+            PrepareSongRandomization();
         }
 
-        public void PlayNextMusic()
+        private void PlayNextMusic()
         {
             if (_musicQueue.Count == 0)
             {
@@ -64,7 +58,7 @@ namespace Game.Scripts.Audio
             }
         }
 
-        public void StopMusic()
+        private void StopMusic()
         {
             _audioManager.StopMusic();
             CancelInvoke(nameof(StopAndPlayNextMusic));
@@ -84,5 +78,35 @@ namespace Game.Scripts.Audio
                 PlayNextMusic();
             }
         }
+        
+        #region RandomizeSongs
+
+        private void PrepareSongRandomization()
+        {
+            SoundSO[] allSongs = _audioManager.GetSongs();
+            
+            musicList = ShuffleArray(allSongs).ToList();
+            
+            foreach (var music in musicList)
+            {
+                _musicQueue.Enqueue(music);
+            }
+
+            if (_musicQueue.Count > 0)
+            {
+                PlayNextMusic();
+            }
+        }
+        private SoundSO[] ShuffleArray(SoundSO[] songs)
+        {
+            for (int i = songs.Length - 1; i > 0; i--)
+            {
+                int j = UnityEngine.Random.Range(0, i + 1);
+                (songs[i], songs[j]) = (songs[j], songs[i]);
+            }
+            return songs;
+        }
+        
+        #endregion
     }
 }
