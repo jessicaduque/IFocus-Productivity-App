@@ -8,6 +8,10 @@ public class UITimeOfDayFilterController : MonoBehaviour
     [SerializeField] private Image afternoonImage;
     [SerializeField] private Image nightImage;
 
+    private Image _currentActiveImage;
+    private int _lastCheckedHour;
+    private int _lastCheckedMinute;
+
     private void Awake()
     {
         UpdateTimeOfDayImage();
@@ -15,6 +19,17 @@ public class UITimeOfDayFilterController : MonoBehaviour
 
     private void Update()
     {
+        int currentHour = DateTime.Now.Hour;
+        int currentMinute = DateTime.Now.Minute;
+
+        // Se o tempo ainda está dentro do mesmo período, não precisa mudar nada
+        if (currentHour == _lastCheckedHour && currentMinute == _lastCheckedMinute)
+            return;
+
+        // Atualiza os registros de hora e minuto
+        _lastCheckedHour = currentHour;
+        _lastCheckedMinute = currentMinute;
+
         UpdateTimeOfDayImage();
     }
 
@@ -22,31 +37,42 @@ public class UITimeOfDayFilterController : MonoBehaviour
     {
         int currentHour = DateTime.Now.Hour;
 
-        // Manhã: 5am - 11am
-        if (currentHour >= 5 && currentHour <= 11)
+        Image newActiveImage = null; // Começa assumindo que nenhuma imagem deve estar ativa
+
+        if (currentHour >= 5 && currentHour <= 10) // Manhã
         {
-            SetActiveImage(morningImage);
+            newActiveImage = morningImage;
         }
-        // Tarde: 12pm - 6pm
-        else if (currentHour >= 12 && currentHour <= 18)
+        else if (currentHour >= 17 && currentHour <= 19) // Tarde
         {
-            SetActiveImage(afternoonImage);
+            newActiveImage = afternoonImage;
         }
-        // Noite: 7pm - 4am
-        else
+        else if (currentHour >= 20 || currentHour <= 4) // Noite
         {
-            SetActiveImage(nightImage);
+            newActiveImage = nightImage;
         }
+        
+        SetActiveImage(newActiveImage);
     }
 
-    private void SetActiveImage(Image activeImage)
+    private void SetActiveImage(Image newActiveImage)
     {
+        // Se já estamos na imagem correta, não precisa mudar nada
+        if (_currentActiveImage == newActiveImage)
+            return;
+
         // Desativa todas as imagens
         morningImage.gameObject.SetActive(false);
         afternoonImage.gameObject.SetActive(false);
         nightImage.gameObject.SetActive(false);
 
-        // Ativa apenas a imagem correta
-        activeImage.gameObject.SetActive(true);
+        // Ativa apenas a imagem correta, se houver uma
+        if (newActiveImage != null)
+        {
+            newActiveImage.gameObject.SetActive(true);
+        }
+
+        // Atualiza a referência da imagem ativa
+        _currentActiveImage = newActiveImage;
     }
 }
