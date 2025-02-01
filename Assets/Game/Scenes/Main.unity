@@ -7745,6 +7745,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 64fd7cd22c2e9d441bccc303273d0268, type: 2}
   - {fileID: 11400000, guid: d086379a9b943f94599eddf92fb1850c, type: 2}
   - {fileID: 11400000, guid: 102b3bde7c508bf4fa72ded86ac2eb64, type: 2}
+  - {fileID: 11400000, guid: e83a47fdaf1567f42b346edc7b5b7113, type: 2}
 --- !u!1 &865796038
 GameObject:
   m_ObjectHideFlags: 0
@@ -13361,6 +13362,7 @@ GameObject:
   - component: {fileID: 1375773660}
   - component: {fileID: 1375773659}
   - component: {fileID: 1375773657}
+  - component: {fileID: 1375773661}
   m_Layer: 5
   m_Name: Teaset_Image
   m_TagString: Untagged
@@ -13469,6 +13471,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375773655}
   m_CullTransparentMesh: 1
+--- !u!114 &1375773661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375773655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cacc87fcdcd26bd4db28676efc3f4b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisButton: {fileID: 1375773657}
+  sensitiveToTransparency: 0
+  soundEffectName: teacup
 --- !u!1 &1380929285
 GameObject:
   m_ObjectHideFlags: 0
