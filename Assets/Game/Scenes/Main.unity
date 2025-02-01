@@ -5915,6 +5915,7 @@ GameObject:
   - component: {fileID: 580262721}
   - component: {fileID: 580262720}
   - component: {fileID: 580262722}
+  - component: {fileID: 580262723}
   m_Layer: 5
   m_Name: Window_Image
   m_TagString: Untagged
@@ -5991,9 +5992,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacc87fcdcd26bd4db28676efc3f4b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisButton: {fileID: 0}
+  thisButton: {fileID: 580262723}
   sensitiveToTransparency: 1
-  soundEffectName: buttonClick
+  soundEffectName: window
+--- !u!114 &580262723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580262718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 580262720}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &581167101
 GameObject:
   m_ObjectHideFlags: 0
@@ -7746,6 +7791,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d086379a9b943f94599eddf92fb1850c, type: 2}
   - {fileID: 11400000, guid: 102b3bde7c508bf4fa72ded86ac2eb64, type: 2}
   - {fileID: 11400000, guid: e83a47fdaf1567f42b346edc7b5b7113, type: 2}
+  - {fileID: 11400000, guid: 0b2b89549ea38dc41a7dc3647c8e436c, type: 2}
 --- !u!1 &865796038
 GameObject:
   m_ObjectHideFlags: 0
