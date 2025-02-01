@@ -18043,9 +18043,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eac8b14943ae47d44aff7b8a7eab97ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  morningImage: {fileID: 0}
-  afternoonImage: {fileID: 0}
-  nightImage: {fileID: 0}
+  morningImage: {fileID: 1712630326}
+  afternoonImage: {fileID: 1152912427}
+  nightImage: {fileID: 932527561}
 --- !u!1 &1859829019
 GameObject:
   m_ObjectHideFlags: 0
