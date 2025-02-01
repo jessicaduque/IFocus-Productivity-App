@@ -8758,7 +8758,7 @@ GameObject:
   - component: {fileID: 932527562}
   - component: {fileID: 932527561}
   m_Layer: 5
-  m_Name: NightTest_Image
+  m_Name: nightImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10896,7 +10896,7 @@ GameObject:
   - component: {fileID: 1152912428}
   - component: {fileID: 1152912427}
   m_Layer: 5
-  m_Name: AfternoonTest_Image
+  m_Name: afternoonImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16275,7 +16275,7 @@ GameObject:
   - component: {fileID: 1712630327}
   - component: {fileID: 1712630326}
   m_Layer: 5
-  m_Name: MorningTest_Image
+  m_Name: morningImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18043,6 +18043,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eac8b14943ae47d44aff7b8a7eab97ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  morningImage: {fileID: 0}
+  afternoonImage: {fileID: 0}
+  nightImage: {fileID: 0}
 --- !u!1 &1859829019
 GameObject:
   m_ObjectHideFlags: 0

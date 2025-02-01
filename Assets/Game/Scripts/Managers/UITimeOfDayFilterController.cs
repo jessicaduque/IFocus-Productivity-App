@@ -1,22 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UITimeOfDayFilterController : MonoBehaviour
 {
-    // 3 imagens
-    // Manhã: 5am-11am, tarde -12pm-6pm, noite 7pm-4am
-    // No update: checar sempre o horário atual, e quanto bater um horário de certo tempo, mudar a imagem que cobre a tela.
-    // Três imagens desativadas, elas devem ser ativadas de acordo.
-    // Setar o correto quando o app começa (no Awake)
-    
-    void Awake()
+    [SerializeField] private Image morningImage;
+    [SerializeField] private Image afternoonImage;
+    [SerializeField] private Image nightImage;
+
+    private void Awake()
     {
-        
+        UpdateTimeOfDayImage();
     }
 
-    void Update()
+    private void Update()
     {
-        
+        UpdateTimeOfDayImage();
+    }
+
+    private void UpdateTimeOfDayImage()
+    {
+        int currentHour = DateTime.Now.Hour;
+
+        // Manhã: 5am - 11am
+        if (currentHour >= 5 && currentHour <= 11)
+        {
+            SetActiveImage(morningImage);
+        }
+        // Tarde: 12pm - 6pm
+        else if (currentHour >= 12 && currentHour <= 18)
+        {
+            SetActiveImage(afternoonImage);
+        }
+        // Noite: 7pm - 4am
+        else
+        {
+            SetActiveImage(nightImage);
+        }
+    }
+
+    private void SetActiveImage(Image activeImage)
+    {
+        // Desativa todas as imagens
+        morningImage.gameObject.SetActive(false);
+        afternoonImage.gameObject.SetActive(false);
+        nightImage.gameObject.SetActive(false);
+
+        // Ativa apenas a imagem correta
+        activeImage.gameObject.SetActive(true);
     }
 }
