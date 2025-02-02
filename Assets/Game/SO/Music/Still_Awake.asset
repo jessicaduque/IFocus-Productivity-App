@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Still_Awake
   m_EditorClassIdentifier: 
   soundName: Still Awake
+  artistName: 
   clip: {fileID: 8300000, guid: 4dd40ff5111533a48b486ea72f35caa7, type: 3}
   loop: 0
   volume: 1

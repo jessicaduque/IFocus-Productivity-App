@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Golden_Hour
   m_EditorClassIdentifier: 
   soundName: Golden Hour
+  artistName: 
   clip: {fileID: 8300000, guid: 5b229d2629ab9e54cac6b2b605162a83, type: 3}
   loop: 0
   volume: 1

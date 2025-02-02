@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: And_So_It_Begins
   m_EditorClassIdentifier: 
   soundName: 
+  artistName: 
   clip: {fileID: 0}
   loop: 0
   volume: 1
