@@ -18,16 +18,18 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
 
     [Header("UI Images")] 
     [SerializeField] private GameObject backgroundTransparencyObject;
-
     private CanvasGroup _backgroundTransparencyCanvasGroup;
 
     [Header("UI Warning Panels")] 
     [SerializeField] private GameObject blurCamera;
     [Header("Delete Panel")]
     [SerializeField] private GameObject deleteTopicWarningPanel;
-
     private DeleteTopicWarningManager _deleteTopicWarningManager;
-
+    
+    [Header("UI Notification Panels")] 
+    [Header("Have Water Panel")]
+    [SerializeField] private GameObject haveWaterNotificationPanel;
+    
     private float _panelTime => Helpers.panelFadeTime;
     
     public UnityAction BackToMainPanelAction, AlarmPanelActivatedAction, ComputerScreenPanelActivatedAction, TodoListPanelActivatedAction, 
@@ -140,6 +142,23 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
             _deleteTopicWarningManager.ClosePanel();
         }
         blurCamera.SetActive(activate);
+    }
+    
+    #endregion
+    
+    #region Notification Panel Controls
+
+    public void ControlHaveWaterNotificationPanel(bool activate)
+    {
+        if (activate)
+        {
+            haveWaterNotificationPanel.SetActive(true);
+        }
+        else
+        {
+            haveWaterNotificationPanel.SetActive(false);
+            //_waterPlantSystemManager.ClosePanel();
+        }
     }
     
     #endregion

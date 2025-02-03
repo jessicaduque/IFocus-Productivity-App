@@ -1,29 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Scripts.Audio;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class WaterPlantsSystemManager : MonoBehaviour
 {
-    [System.Serializable]
+    [Serializable]
     public class Plant
     {
         public Image plantImage; 
+        public Button plantButton; 
         public Sprite wetSprite;  
         public Sprite drySprite;
-        [HideInInspector] public bool isDry = false;
+        public GameObject waterPlantEffect;
     }
+    [Header("Plants Components")]
     [SerializeField] private Plant[] plantsArray; 
-    [SerializeField] private Button[] plantsButtonArray; 
-    private Plant _previouslyDriedPlant;
-
+    private Plant _currentDryPlant, _previouslyDriedPlant;
+    [Header("Plant Times")]
     [SerializeField] private Vector2 initialTimeForPlant;
     [SerializeField] private Vector2 timeBetweenRounds;
-    
+    [SerializeField] private float timeForAnimation;
+    [Header("UI Elements")] 
+    [SerializeField] private GameObject blockClicksPanel;
+    [SerializeField] private Button closeHaveWaterPanelButton;
+    private UIPanelsManager _uIPanelsManager => UIPanelsManager.I;
+    private AudioManager _audioManager => AudioManager.I;
 
-    private void Start()
+    private void Awake()
     {
+        closeHaveWaterPanelButton.onClick.AddListener(delegate
+        {
+            _uIPanelsManager.ControlHaveWaterNotificationPanel(false);
+        });
+        
         InitializePlants();
         float initialTime = Random.Range(initialTimeForPlant.x, initialTimeForPlant.y);
         StartCoroutine(StartRounds(initialTime));
@@ -33,10 +47,31 @@ public class WaterPlantsSystemManager : MonoBehaviour
     {
         foreach (var plant in plantsArray)
         {
-            SetPlantHealthy(plant);
+            SetPlantWet(plant);
+            plant.plantButton.onClick.AddListener(WaterPlant);
+            plant.plantButton.enabled = false;
         }
     }
 
+    private void SetPlantWet(Plant plant)
+    {
+        plant.plantImage.sprite = plant.wetSprite;
+        plant.waterPlantEffect.SetActive(false);
+    }
+    
+    private void SetPlantDry(Plant plant)
+    {
+        plant.plantImage.sprite = plant.drySprite;
+        _currentDryPlant = plant;
+        SetPreviousDryPlant(plant);
+        plant.plantButton.enabled = true;
+    }
+    
+    private void SetPreviousDryPlant(Plant currentPlant)
+    {
+        _previouslyDriedPlant = currentPlant;
+    }
+    
     private IEnumerator StartRounds(float time)
     {
         yield return new WaitForSeconds(time);
@@ -53,45 +88,25 @@ public class WaterPlantsSystemManager : MonoBehaviour
         {
             // Escolhe a planta para murchar
             plantToWilt = eligiblePlants[Random.Range(0, eligiblePlants.Count)];
-            SetPlantWilted(plantToWilt);
+            SetPlantDry(plantToWilt);
         }
 
         // Atualiza a lista de plantas murchas
-        UpdatePreviouslyWiltedPlants(plantToWilt);
+        SetPreviousDryPlant(plantToWilt);
     }
 
-    private void UpdatePreviouslyWiltedPlants(Plant currentPlant)
+    private void WaterPlant()
     {
-        _previouslyDriedPlant = currentPlant;
+        StartCoroutine(WaterPlantCoroutine());
     }
-
-    private void SetPlantHealthy(Plant plant)
+    private IEnumerator WaterPlantCoroutine()
     {
-        plant.isDry = false;
-        plant.plantImage.GetComponent<Image>().sprite = plant.wetSprite;
+        blockClicksPanel.SetActive(true);
+        _audioManager.PlaySfx("waterPlant");
+        _currentDryPlant.waterPlantEffect.SetActive(true);
+        yield return new WaitForSeconds(timeForAnimation);
+        _uIPanelsManager.ControlHaveWaterNotificationPanel(true);
+        blockClicksPanel.SetActive(false);
     }
-
-    private void SetPlantWilted(Plant plant)
-    {
-        plant.isDry = true;
-        plant.plantImage.GetComponent<Image>().sprite = plant.drySprite;
-    }
-
-    private void ToggleState(Plant plant)
-    {
-        SetPlantHealthy(plant);
-        //Button botaoPlanta;
-        //botaoPlanta.interactable = true;
-    }
-
-    /*
-    public void OnPlantClicked(GameObject clickedPlant)
-    {
-        Plant clicked = plants.Find(p => p.plantObject == clickedPlant);
-        if (clicked != null && clicked.isWilted)
-        {
-            SetPlantHealthy(clicked);
-        }
-    }
-    */
+    
 }
