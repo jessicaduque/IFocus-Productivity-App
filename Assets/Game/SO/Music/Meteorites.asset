@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Meteorites
   m_EditorClassIdentifier: 
   soundName: Meteorites
+  artistName: 
   clip: {fileID: 8300000, guid: 718f4ea05727e7e459fe9473454bffd2, type: 3}
   loop: 0
   volume: 1

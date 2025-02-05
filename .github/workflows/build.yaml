@@ -36,3 +36,15 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}
           path: build/${{ matrix.targetPlatform }}
+
+      - name: Configure AWS credentials with STS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+
+      - name: Upload artifact to S3
+        run: aws s3 cp build/${{ matrix.targetPlatform }} s3://ifocus/${{ env.BUILD_NAME }}/ --recursive

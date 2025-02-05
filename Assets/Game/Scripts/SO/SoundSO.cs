@@ -3,6 +3,7 @@ using UnityEngine;
 public class SoundSO : ScriptableObject
 {
     public string soundName;
+    public string artistName;
     public AudioClip clip;
     public bool loop;
 

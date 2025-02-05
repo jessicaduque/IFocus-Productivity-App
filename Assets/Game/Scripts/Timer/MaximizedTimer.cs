@@ -16,7 +16,6 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button resumeButton;
-    [SerializeField] private Button generalLeaveButton;
     [SerializeField] private Button exitButton;
     [Header("Input Fields")] // Input fields do timer para input do usuário e definição do timer
     [SerializeField] private TMP_InputField hoursInputField;
@@ -104,7 +103,6 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
         pauseButton.onClick.AddListener(Pause); // Adiciona o método de pausa quando o timer é pausado
         resumeButton.onClick.AddListener(Resume); // Adiciona o método de resumir o timer quando é resumido
         quitButton.onClick.AddListener(Quit); // Adiciona o método de cancelar o timer quando é cancelado
-        generalLeaveButton.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); ControlStateButtons(true); }); // Adiciona ações de desligar o painel de alarme maximizado e re-ligar os componentes de botões dele quando é fechado 
         exitButton.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); ControlStateButtons(true); });  
     }
     
@@ -218,7 +216,6 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
     // Método para controlar a interação com os botões do timer maximizado
     private void ControlStateButtons(bool activated)
     {
-        generalLeaveButton.interactable = activated;
         playButton.interactable = activated;
         pauseButton.interactable = activated;
         quitButton.interactable = activated;

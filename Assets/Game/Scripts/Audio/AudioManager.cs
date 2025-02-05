@@ -352,5 +352,10 @@ namespace Game.Scripts.Audio
             PlayerPrefs.Save();
         }
 
+        public SoundSO[] GetSongs()
+        {
+            return music.ToArray();
+        }
+        
     }
 }
