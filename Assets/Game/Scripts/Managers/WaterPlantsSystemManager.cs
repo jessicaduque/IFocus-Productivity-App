@@ -108,5 +108,4 @@ public class WaterPlantsSystemManager : MonoBehaviour
         _uIPanelsManager.ControlHaveWaterNotificationPanel(true);
         blockClicksPanel.SetActive(false);
     }
-    
 }

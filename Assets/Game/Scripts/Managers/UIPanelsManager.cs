@@ -29,6 +29,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [Header("UI Notification Panels")] 
     [Header("Have Water Panel")]
     [SerializeField] private GameObject haveWaterNotificationPanel;
+    private WaterPlantsSystemManager _waterPlantSystemManager;
     
     private float _panelTime => Helpers.panelFadeTime;
     
@@ -39,10 +40,12 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     {
         base.Awake();
         computerScreenPanel.transform.localScale = Vector3.zero;
+        haveWaterNotificationPanel.transform.localScale = Vector3.zero;
         
         // Getting private variables
         _backgroundTransparencyCanvasGroup = backgroundTransparencyObject.GetComponent<CanvasGroup>();
         _deleteTopicWarningManager = deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>();
+        _waterPlantSystemManager = haveWaterNotificationPanel.GetComponent<WaterPlantsSystemManager>();
         _maximizedTimer = timerPanel.GetComponent<MaximizedTimer>();
     }
 
@@ -153,11 +156,15 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             haveWaterNotificationPanel.SetActive(true);
+            haveWaterNotificationPanel.transform.DOScale(1, _panelTime);
+            backgroundTransparencyObject.SetActive(true);
+            _backgroundTransparencyCanvasGroup.DOFade(1, _panelTime);
         }
         else
         {
-            haveWaterNotificationPanel.SetActive(false);
-            //_waterPlantSystemManager.ClosePanel();
+            haveWaterNotificationPanel.transform.DOScale(0, _panelTime).OnComplete(() => haveWaterNotificationPanel.SetActive(false));
+            backgroundTransparencyObject.SetActive(false);
+            _backgroundTransparencyCanvasGroup.DOFade(0, _panelTime);
         }
     }
     
