@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Game.Scripts.Audio;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,8 +20,8 @@ public class WaterPlantsSystemManager : MonoBehaviour
     [SerializeField] private Plant[] plantsArray; 
     private Plant _currentDryPlant, _previouslyDriedPlant;
     [Header("Plant Times")]
-    [SerializeField] private Vector2 initialTimeForPlant;
-    [SerializeField] private Vector2 timeBetweenRounds;
+    [SerializeField] private Vector2 initialTimeForPlantSeconds;
+    [SerializeField] private Vector2 timeBetweenRoundsSeconds;
     [SerializeField] private float timeForAnimation;
     [Header("UI Elements")] 
     [SerializeField] private GameObject blockClicksPanel;
@@ -39,8 +37,8 @@ public class WaterPlantsSystemManager : MonoBehaviour
         });
         
         InitializePlants();
-        float initialTime = Random.Range(initialTimeForPlant.x, initialTimeForPlant.y);
-        StartCoroutine(StartRounds(initialTime));
+        float initialTime = Random.Range(initialTimeForPlantSeconds.x, initialTimeForPlantSeconds.y);
+        StartCoroutine(StartRoundCoroutine(initialTime));
     }
 
     private void InitializePlants()
@@ -56,43 +54,48 @@ public class WaterPlantsSystemManager : MonoBehaviour
     private void SetPlantWet(Plant plant)
     {
         plant.plantImage.sprite = plant.wetSprite;
-        plant.waterPlantEffect.SetActive(false);
+        plant.plantButton.enabled = false;
     }
     
     private void SetPlantDry(Plant plant)
     {
         plant.plantImage.sprite = plant.drySprite;
         _currentDryPlant = plant;
-        SetPreviousDryPlant(plant);
+        _previouslyDriedPlant = plant;
         plant.plantButton.enabled = true;
     }
     
-    private void SetPreviousDryPlant(Plant currentPlant)
-    {
-        _previouslyDriedPlant = currentPlant;
-    }
-    
-    private IEnumerator StartRounds(float time)
+    private IEnumerator StartRoundCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
-        SelectRandomPlantToWilt();
+        SelectRandomPlantToDry();
     }
 
-    private void SelectRandomPlantToWilt()
+    private void SelectRandomPlantToDry()
     {
-        // Filtra as plantas que estavam saudaveis na rodada anterior
-        List<Plant> eligiblePlants = plantsArray.ToList();
-
-        Plant plantToWilt = new Plant();
-        if (eligiblePlants.Count > 0)
+        if (_previouslyDriedPlant == null)
         {
-            // Escolhe a planta para murchar
-            plantToWilt = eligiblePlants[Random.Range(0, eligiblePlants.Count)];
-            SetPlantDry(plantToWilt);
+            if (PlayerPrefs.HasKey("previouslyDriedPlant"))
+            {
+                _previouslyDriedPlant = plantsArray[PlayerPrefs.GetInt("previouslyDriedPlant")];
+            }
         }
 
-        // Atualiza a lista de plantas murchas
-        SetPreviousDryPlant(plantToWilt);
+        int plantToDry = Random.Range(0, plantsArray.Length);
+        if (_previouslyDriedPlant == null)
+        {
+            SetPlantDry(plantsArray[plantToDry]);
+        }
+        else
+        {
+            while (plantsArray[plantToDry] == _previouslyDriedPlant)
+            {
+                plantToDry = Random.Range(0, plantsArray.Length);
+            }
+            SetPlantDry(plantsArray[plantToDry]);
+        }
+
+        PlayerPrefs.SetInt("previouslyDriedPlant", plantToDry);
     }
 
     private void WaterPlant()
@@ -104,8 +107,13 @@ public class WaterPlantsSystemManager : MonoBehaviour
         blockClicksPanel.SetActive(true);
         _audioManager.PlaySfx("waterPlant");
         _currentDryPlant.waterPlantEffect.SetActive(true);
-        yield return new WaitForSeconds(timeForAnimation);
+        yield return new WaitForSeconds(timeForAnimation * 2 / 3);
+        SetPlantWet(_currentDryPlant);
+        yield return new WaitForSeconds(timeForAnimation / 3);
         _uIPanelsManager.ControlHaveWaterNotificationPanel(true);
+        _currentDryPlant.waterPlantEffect.SetActive(false);
         blockClicksPanel.SetActive(false);
+        float nextRoundTime = Random.Range(timeBetweenRoundsSeconds.x, timeBetweenRoundsSeconds.y);
+        StartCoroutine(StartRoundCoroutine(nextRoundTime));
     }
 }

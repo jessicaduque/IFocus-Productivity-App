@@ -8,14 +8,16 @@ public class Plantinhas : MonoBehaviour
     [System.Serializable]
     public class Plant
     {
-        public GameObject plantObject; 
-        public Sprite healthySprite;  
+        public Image plantObject;
+        public Sprite healthySprite;
         public Sprite wiltedSprite;
         [HideInInspector] public bool isWilted = false;
+        public Button botaoPlanta;
     }
-    public List<Plant> plants; 
-    public float timeBetweenRounds = 5f; 
-    private List<Plant> previouslyWiltedPlants = new List<Plant>(); 
+    public List<Plant> plants;
+    public float timeBetweenRounds = 5f;
+    private Plant previouslyWiltedPlants = null;
+    private Plant wilted = null;
 
     private void Start()
     {
@@ -23,31 +25,13 @@ public class Plantinhas : MonoBehaviour
         StartCoroutine(StartRounds());
     }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                foreach (var plant in plants)
-                {
-                    if (hit.collider.gameObject == plant.plantObject)
-                    {
-                        ToggleState(plant);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     private void InitializePlants()
     {
         foreach (var plant in plants)
         {
             SetPlantHealthy(plant);
+            plant.botaoPlanta.onClick.AddListener(() => OnPlantClicked());
         }
     }
 
@@ -62,49 +46,69 @@ public class Plantinhas : MonoBehaviour
 
     private void SelectRandomPlantToWilt()
     {
-        // Filtra as plantas que estavam saudaveis na rodada anterior
-        List<Plant> eligiblePlants = plants.FindAll(p => !p.isWilted && !previouslyWiltedPlants.Contains(p));
 
-        if (eligiblePlants.Count > 0)
+        if(previouslyWiltedPlants == null || previouslyWiltedPlants.isWilted == false)
         {
-            // Escolhe a planta para murchar
-            Plant plantToWilt = eligiblePlants[Random.Range(0, eligiblePlants.Count)];
-            SetPlantWilted(plantToWilt);
+            // Filtra as plantas que estavam saudaveis na rodada anterior
+            List<Plant> eligiblePlants = new List<Plant>();
+
+            foreach (var plant in plants)
+            {
+                if (previouslyWiltedPlants != plant)
+                {
+                    eligiblePlants.Add(plant);
+                }
+            }
+
+            if (eligiblePlants.Count > 0)
+            {
+                // Escolhe a planta para murchar
+                Plant plantToWilt = eligiblePlants[Random.Range(0, eligiblePlants.Count)];
+                SetPlantWilted(plantToWilt);
+            }
+
+            // Atualiza a lista de plantas murchas
+            UpdatePreviouslyWiltedPlants();
         }
 
-        // Atualiza a lista de plantas murchas
-        UpdatePreviouslyWiltedPlants();
     }
 
     private void UpdatePreviouslyWiltedPlants()
     {
-        previouslyWiltedPlants.Clear();
         foreach (var plant in plants)
         {
             if (plant.isWilted)
             {
-                previouslyWiltedPlants.Add(plant);
+                previouslyWiltedPlants = plant; 
             }
         }
     }
 
-    private void SetPlantHealthy(Plant plant)
+    public void SetPlantHealthy(Plant plant)
     {
+        if (plant == null || plant.plantObject == null || plant.plantObject.GetComponent<Image>() == null || plant.botaoPlanta == null)
+        {
+            Debug.LogError("Plant or its components are not properly configured!");
+            return;
+        }
+
         plant.isWilted = false;
         plant.plantObject.GetComponent<Image>().sprite = plant.healthySprite;
+        plant.botaoPlanta.interactable = false;
     }
 
     private void SetPlantWilted(Plant plant)
     {
+        wilted = plant;
         plant.isWilted = true;
         plant.plantObject.GetComponent<Image>().sprite = plant.wiltedSprite;
+        plant.botaoPlanta.interactable = true;
     }
 
-    private void ToggleState(Plant plant)
+    public void OnPlantClicked()
     {
-        SetPlantHealthy(plant);
-        //Button botaoPlanta;
-        //botaoPlanta.interactable = true;
+        SetPlantHealthy(wilted);
+
     }
 
     /*
