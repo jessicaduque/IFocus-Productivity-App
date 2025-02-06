@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonExtra : MonoBehaviour
 {
-    [SerializeField]private Button thisButton;
+    [SerializeField] protected Button thisButton;
     [SerializeField] private bool sensitiveToTransparency;
     [SerializeField] private string soundEffectName = "buttonClick";
     private AudioManager _audioManager => AudioManager.I;
@@ -21,7 +21,7 @@ public class ButtonExtra : MonoBehaviour
 
 #endif
 
-    private void Awake()
+    protected virtual void Awake()
     {
         thisButton.onClick.AddListener(MakeSound);
     }
