@@ -4,11 +4,14 @@ using UnityEngine.UI;
 
 public class UITimeOfDayFilterController : MonoBehaviour
 {
-    [SerializeField] private Image morningImage;
-    [SerializeField] private Image afternoonImage;
-    [SerializeField] private Image nightImage;
+    [SerializeField] private GameObject morningImage;
+    [SerializeField] private GameObject afternoonImage;
+    [SerializeField] private GameObject nightImage;
 
-    private Image _currentActiveImage;
+    [SerializeField] private GameObject computerLightAfternoonImage;
+    [SerializeField] private GameObject computerLightNightImage;
+    
+    private GameObject _currentActiveImage;
     private int _lastCheckedHour;
     private int _lastCheckedMinute;
 
@@ -37,34 +40,40 @@ public class UITimeOfDayFilterController : MonoBehaviour
     {
         int currentHour = DateTime.Now.Hour;
 
-        Image newActiveImage = null; // Começa assumindo que nenhuma imagem deve estar ativa
+        GameObject newActiveImage = null; // Começa assumindo que nenhuma imagem deve estar ativa
 
         if (currentHour >= 5 && currentHour <= 10) // Manhã
         {
             newActiveImage = morningImage;
+            computerLightAfternoonImage.SetActive(false);
+            computerLightNightImage.SetActive(false);
         }
         else if (currentHour >= 17 && currentHour <= 19) // Tarde
         {
             newActiveImage = afternoonImage;
+            computerLightNightImage.SetActive(false);
+            computerLightAfternoonImage.SetActive(true);
         }
         else if (currentHour >= 20 || currentHour <= 4) // Noite
         {
             newActiveImage = nightImage;
+            computerLightAfternoonImage.SetActive(false);
+            computerLightNightImage.SetActive(true);
         }
         
         SetActiveImage(newActiveImage);
     }
 
-    private void SetActiveImage(Image newActiveImage)
+    private void SetActiveImage(GameObject newActiveImage)
     {
         // Se já estamos na imagem correta, não precisa mudar nada
         if (_currentActiveImage == newActiveImage)
             return;
 
         // Desativa todas as imagens
-        morningImage.gameObject.SetActive(false);
-        afternoonImage.gameObject.SetActive(false);
-        nightImage.gameObject.SetActive(false);
+        morningImage.SetActive(false);
+        afternoonImage.SetActive(false);
+        nightImage.SetActive(false);
 
         // Ativa apenas a imagem correta, se houver uma
         if (newActiveImage != null)
