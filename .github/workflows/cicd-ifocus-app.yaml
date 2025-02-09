@@ -1,0 +1,70 @@
+name: CICD-IFOCUS-APP
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  unity-tests:
+    name: Unity Android Unit Tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run Unity Unit Tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          testMode: editmode
+          unityVersion: 2022.3.30f1
+          artifactsPath: test-results
+
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }} - Ifocus App
+    runs-on: ubuntu-latest
+    needs: unity-tests
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - Android
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+      - name: Generate Build Name
+        run: echo "BUILD_NAME=iFocus-$(date +%Y%m%d%H%M%S | md5sum | cut -c1-8)" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BUILD_NAME }}
+          path: build/${{ matrix.targetPlatform }}
+      - name: Configure AWS credentials with STS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+      - name: Upload artifact to S3
+        run: aws s3 cp build/${{ matrix.targetPlatform }} s3://ifocus/${{ env.BUILD_NAME }}/ --recursive
