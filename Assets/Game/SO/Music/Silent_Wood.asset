@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Silent_Wood
   m_EditorClassIdentifier: 
   soundName: Silent Wood
-  artistName: 
+  artistName: Purrple Cat
   clip: {fileID: 8300000, guid: e68bff0e0ec4ff74fabd40d4fca3052c, type: 3}
   loop: 0
   volume: 1

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Purple-Dream
   m_EditorClassIdentifier: 
   soundName: Purple-Dream
-  artistName: 
+  artistName: Ghostrifter Official
   clip: {fileID: 8300000, guid: 6dad81371a3267a43bc43918761f11a4, type: 3}
   loop: 0
   volume: 1
   pitch: 1
-  timeSeconds: 0
+  timeSeconds: 133

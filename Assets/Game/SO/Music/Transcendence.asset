@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Transcendence
   m_EditorClassIdentifier: 
   soundName: Transcendence
-  artistName: 
+  artistName: Alexander Nakarada
   clip: {fileID: 8300000, guid: 81212d7a89bce414fb05b04797137d04, type: 3}
   loop: 0
   volume: 1

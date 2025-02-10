@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wish_You_Were Here
   m_EditorClassIdentifier: 
   soundName: Wish You Were Here
-  artistName: 
+  artistName: Purrple Cat
   clip: {fileID: 8300000, guid: 6cd48b0691e1d7e46a59ecff0a9ecd56, type: 3}
   loop: 0
   volume: 1

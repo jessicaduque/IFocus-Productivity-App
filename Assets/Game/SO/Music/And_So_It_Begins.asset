@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
   m_Name: And_So_It_Begins
   m_EditorClassIdentifier: 
-  soundName: 
-  artistName: 
-  clip: {fileID: 0}
+  soundName: And So It Begins
+  artistName: Artificial.Music
+  clip: {fileID: 8300000, guid: 2cfa3939d80ee024aa3f24bc149a68af, type: 3}
   loop: 0
   volume: 1
   pitch: 1
-  timeSeconds: 0
+  timeSeconds: 207
