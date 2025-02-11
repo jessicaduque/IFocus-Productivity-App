@@ -25,14 +25,12 @@ public class TimerManager : MonoBehaviour
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        Debug.Log("aa");
         ApplicationPause(pauseStatus);
     }
     
 #if UNITY_EDITOR
-    private void OnApplicationFocus(bool focusStatus)
+    private void OnApplicationFocus(bool focusStatus) // É NECESSÁRIO GAME SER WINDOW SEPARADO PARA NÃO SER CHAMADO DUAS VEZES NA MESMA FRAME E TESTAR CORRETAMENTE
     {
-        Debug.Log("bbaa");
         ApplicationPause(!focusStatus);
     }
     
@@ -60,6 +58,7 @@ public class TimerManager : MonoBehaviour
 
     private void SaveTimerInfo(float secondsTimerLeft, float totalSeconds, bool isPaused)
     {
+        if (secondsTimerLeft < 0) secondsTimerLeft = 0;
         PlayerPrefs.SetFloat("SecondsLeftTimer", secondsTimerLeft);
         PlayerPrefs.SetFloat("TotalSecondsTimer", totalSeconds);
         PlayerPrefs.SetString("DatetimeExit", DateTime.Now.ToString());
@@ -74,11 +73,6 @@ public class TimerManager : MonoBehaviour
             var timeSinceExit = DateTime.Now - dateOfExit;
             float secondsLeftExit = PlayerPrefs.GetFloat("SecondsLeftTimer");
             bool isPaused = PlayerPrefs.GetInt("TimerIsPaused") == 1;
-            
-            Debug.Log("paused: " + isPaused);
-            Debug.Log("times: " + timeSinceExit);
-            Debug.Log("secondsLeftExit: " + secondsLeftExit);
-            Debug.Log("dateOfExit: " + dateOfExit);
             
             if (isPaused && secondsLeftExit > 0)
             {
