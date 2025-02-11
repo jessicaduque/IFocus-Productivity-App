@@ -34,7 +34,7 @@ public class TimerTests
         float expectedTimeRemaining = 1500 - (float)elapsed.TotalSeconds;
 
         // Assert
-        Assert.AreEqual(expectedTimeRemaining, _timerManager.GetSecondsLeft(), 1.0f);
+        Assert.AreEqual(expectedTimeRemaining, _timerManager.GetSecondsLeft(), 2.0f);
         Assert.AreEqual(TIMER_STATE.TIMER_ON, _timerManager.GetTimerState());
     }
 

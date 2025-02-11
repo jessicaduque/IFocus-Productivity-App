@@ -28,6 +28,11 @@ public class TimerManager : MonoBehaviour
         ApplicationPause(pauseStatus);
     }
     
+    private void OnApplicationFocus(bool focusStatus)
+    {
+        ApplicationPause(focusStatus);
+    }
+    
     #endregion
     
     #region Timer Control
@@ -64,6 +69,12 @@ public class TimerManager : MonoBehaviour
             var timeSinceExit = DateTime.Now - dateOfExit;
             float secondsLeftExit = PlayerPrefs.GetFloat("SecondsLeftTimer");
             bool isPaused = PlayerPrefs.GetInt("TimerIsPaused") == 1;
+            
+            Debug.Log("paused: " + isPaused);
+            Debug.Log("times: " + timeSinceExit);
+            Debug.Log("secondsLeftExit: " + secondsLeftExit);
+            Debug.Log("dateOfExit: " + dateOfExit);
+            
             if (isPaused && secondsLeftExit > 0)
             {
                 _secondsLeft = secondsLeftExit;
