@@ -103,7 +103,7 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
         pauseButton.onClick.AddListener(Pause); // Adiciona o método de pausa quando o timer é pausado
         resumeButton.onClick.AddListener(Resume); // Adiciona o método de resumir o timer quando é resumido
         quitButton.onClick.AddListener(Quit); // Adiciona o método de cancelar o timer quando é cancelado
-        exitButton.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); ControlStateButtons(true); });  
+        exitButton.onClick.AddListener(delegate { _uiPanelsManager.ControlAlarmPanel(false); });  
     }
     
     #region Unity Callbacks
@@ -216,10 +216,11 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
     // Método para controlar a interação com os botões do timer maximizado
     private void ControlStateButtons(bool activated)
     {
-        playButton.interactable = activated;
-        pauseButton.interactable = activated;
-        quitButton.interactable = activated;
-        resumeButton.interactable = activated;
+        playButton.enabled = activated;
+        pauseButton.enabled = activated;
+        quitButton.enabled = activated;
+        resumeButton.enabled = activated;
+        exitButton.enabled = activated;
     }
 
     public void ClosePanel()
@@ -253,6 +254,7 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
 
     private IEnumerator AnimationOpen()
     {
+        ControlStateButtons(false);
         exitButton.transform.localScale = Vector3.zero;
         mainTimerObjectTransform.localScale = Vector3.one;
         
@@ -274,10 +276,13 @@ public class MaximizedTimer : Utils.Singleton.Singleton<MaximizedTimer> // Esta 
         }
 
         sequenceOpen.Insert(_animationsTime / 2, exitButton.transform.DOScale(1, _animationsTime));
+
+        sequenceOpen.OnComplete(delegate { ControlStateButtons(true); });
     }
     
     private void AnimationClose()
     {
+        ControlStateButtons(false);
         sequenceClose = DOTween.Sequence();
         
         sequenceClose.Join(mainTimerObjectTransform.DOScale(0, _animationsTime));

@@ -1,6 +1,5 @@
 using Utils.Singleton;
 using UnityEngine;
-using UnityEngine.Events;
 using DG.Tweening;
 
 public class UIPanelsManager : Singleton<UIPanelsManager>
@@ -9,6 +8,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [SerializeField] private GameObject timerPanel;
     private MaximizedTimer _maximizedTimer;
     [SerializeField] private GameObject computerScreenPanel;
+    private ComputerScreenManager _computerScreenManager => ComputerScreenManager.I;
     [SerializeField] private GameObject todoListPanel;
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
@@ -32,9 +32,6 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     private WaterPlantsSystemManager _waterPlantSystemManager;
     
     private float _panelTime => Helpers.panelFadeTime;
-    
-    public UnityAction BackToMainPanelAction, AlarmPanelActivatedAction, ComputerScreenPanelActivatedAction, TodoListPanelActivatedAction, 
-        StudyTopicsPanelActivatedAction, StatisticsPanelActivatedAction, MusicPanelActivatedAction;
 
     protected override void Awake()
     {
@@ -55,30 +52,31 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             timerPanel.SetActive(true);
-            AlarmPanelActivatedAction?.Invoke();
         }
         else
         {
             _maximizedTimer.ClosePanel();
-            BackToMainPanelAction?.Invoke();
         }
     }
     public void ControlComputerScreenPanel(bool activate)
     {
         if (activate)
         {
+            _computerScreenManager.ControlStateButtons(false);
             computerScreenPanel.SetActive(true);
-            computerScreenPanel.transform.DOScale(1, _panelTime);
+            computerScreenPanel.transform.DOScale(1, _panelTime).OnComplete(delegate
+            {
+                _computerScreenManager.ControlStateButtons(true);
+            });
             backgroundTransparencyObject.SetActive(true);
             _backgroundTransparencyCanvasGroup.DOFade(1, _panelTime);
-            ComputerScreenPanelActivatedAction?.Invoke();
         }
         else
         {
+            _computerScreenManager.ControlStateButtons(false);
             computerScreenPanel.transform.DOScale(0, _panelTime).OnComplete(() => computerScreenPanel.SetActive(false));
             backgroundTransparencyObject.SetActive(false);
             _backgroundTransparencyCanvasGroup.DOFade(0, _panelTime);
-            BackToMainPanelAction?.Invoke();
         }
     }
     public void ControlTodoListPanel(bool activate)
@@ -86,7 +84,6 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             todoListPanel.SetActive(true);
-            TodoListPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -98,7 +95,6 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             studyTopicsPanel.SetActive(true);
-            StudyTopicsPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -110,7 +106,6 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             statisticsPanel.SetActive(true);
-            StatisticsPanelActivatedAction?.Invoke();
         }
         else
         {
@@ -122,7 +117,6 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         if (activate)
         {
             musicPanel.SetActive(true);
-            MusicPanelActivatedAction?.Invoke();
         }
         else
         {
