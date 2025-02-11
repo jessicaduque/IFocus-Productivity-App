@@ -133,6 +133,31 @@ namespace Game.Scripts.Audio
                 }
             }
         }
+        
+        public void PauseMusic()
+        {
+            if (_musicSource1IsPlaying)
+            {
+                _musicSource1.Pause();
+            }
+            else
+            {
+                _musicSource2.Pause();
+            }
+        }
+        
+        public void ContinuePausedMusic()
+        {
+            if (_musicSource1IsPlaying)
+            {
+                _musicSource1.UnPause();
+            }
+            else
+            {
+                _musicSource2.UnPause();
+            }
+        }
+        
         public void StopMusic()
         {
             if (_musicSource1IsPlaying)
