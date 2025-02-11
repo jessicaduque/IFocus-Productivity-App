@@ -31,11 +31,6 @@ public class ButtonExtra : MonoBehaviour
         if(sensitiveToTransparency) thisButton.targetGraphic.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
     }
 
-    private void OnEnable()
-    {
-        thisButton.enabled = true;
-    }
-
     private void OnDisable()
     {
         StopAllCoroutines();
