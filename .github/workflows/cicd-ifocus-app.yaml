@@ -55,12 +55,10 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
       - name: Generate Build Name
         run: echo "BUILD_NAME=iFocus-$(date +%Y%m%d%H%M%S | md5sum | cut -c1-8)" >> $GITHUB_ENV
-      - name: Rename APK
-        run: mv build/${{ matrix.targetPlatform }}/Android.apk build/${{ matrix.targetPlatform }}/${{ env.BUILD_NAME }}.apk
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.BUILD_NAME }}
-          path: build/${{ matrix.targetPlatform }}/${{ env.BUILD_NAME }}.apk
+          path: build/${{ matrix.targetPlatform }}
       - name: Configure AWS credentials with STS
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -69,4 +67,4 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
       - name: Upload artifact to S3
-        run: aws s3 cp build/${{ matrix.targetPlatform }}/${{ env.BUILD_NAME }}.apk s3://ifocus/${{ env.BUILD_NAME }}/
+        run: aws s3 cp build/${{ matrix.targetPlatform }} s3://ifocus/${{ env.BUILD_NAME }}/ --recursive
