@@ -25,13 +25,18 @@ public class TimerManager : MonoBehaviour
 
     private void OnApplicationPause(bool pauseStatus)
     {
+        Debug.Log("aa");
         ApplicationPause(pauseStatus);
     }
     
+#if UNITY_EDITOR
     private void OnApplicationFocus(bool focusStatus)
     {
-        ApplicationPause(focusStatus);
+        Debug.Log("bbaa");
+        ApplicationPause(!focusStatus);
     }
+    
+#endif
     
     #endregion
     
