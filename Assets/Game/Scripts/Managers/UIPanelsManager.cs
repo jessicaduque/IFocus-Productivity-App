@@ -1,6 +1,7 @@
 using Utils.Singleton;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class UIPanelsManager : Singleton<UIPanelsManager>
 {
@@ -13,6 +14,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
     [SerializeField] private GameObject blockClicksPanel;
+    private Button _blockClicksPanelButton;
     [Header("AINDA NÃO IMPLEMENTADO")]
     [SerializeField] private GameObject musicPanel;
 
@@ -43,6 +45,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
         _backgroundTransparencyCanvasGroup = backgroundTransparencyObject.GetComponent<CanvasGroup>();
         _deleteTopicWarningManager = deleteTopicWarningPanel.GetComponent<DeleteTopicWarningManager>();
         _waterPlantSystemManager = haveWaterNotificationPanel.GetComponent<WaterPlantsSystemManager>();
+        _blockClicksPanelButton = blockClicksPanel.GetComponent<Button>();
         _maximizedTimer = timerPanel.GetComponent<MaximizedTimer>();
     }
 
@@ -164,11 +167,16 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     
     #endregion
     
-    #region Extra
+    #region Control Blocks Click Panel
 
     public void ControlBlockClicksPanel(bool activate)
     {
         blockClicksPanel.SetActive(activate);
+    }
+    
+    public Button GetControlBlockClicksPanelButton()
+    {
+        return _blockClicksPanelButton;
     }
     
     #endregion

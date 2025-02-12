@@ -49,32 +49,26 @@ public class TutorialObject : MonoBehaviour
     private void TutorialPanelOpened()
     {
         _uIPanelsManager.ControlBlockClicksPanel(true);
+        
         StartCoroutine(TutorialPanelOpenedCoroutine());
     }
 
     private IEnumerator TutorialPanelOpenedCoroutine()
     {
         yield return new WaitForSeconds(0.5f);
-        while (true)
-        {
-#if UNITY_EDITOR
-            if (Input.GetMouseButtonDown(0))
-#elif PLATFORM_ANDROID
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
-#endif
-            {
-                thisRelatedGameBigBubbleText.transform.DOScale(0, _panelTime).OnComplete(delegate
-                {
-                    thisRelatedGameBigBubbleText.SetActive(false);
-                    thisRelatedButton.onClick.RemoveListener(TutorialPanelOpened);
-                    _uIPanelsManager.ControlBlockClicksPanel(false);
-                    PlayerPrefs.SetInt(_playerPrefsTutorialID, 1);
-                    gameObject.SetActive(false);
-                });
-                break;
-            }
+        _uIPanelsManager.GetControlBlockClicksPanelButton().onClick.AddListener(FinishTutorialOpened);
+    }
 
-            yield return null;
-        }
+    private void FinishTutorialOpened()
+    {
+        thisRelatedGameBigBubbleText.transform.DOScale(0, _panelTime).OnComplete(delegate
+        {
+            _uIPanelsManager.GetControlBlockClicksPanelButton().onClick.RemoveListener(FinishTutorialOpened);
+            thisRelatedGameBigBubbleText.SetActive(false);
+            thisRelatedButton.onClick.RemoveListener(TutorialPanelOpened);
+            _uIPanelsManager.ControlBlockClicksPanel(false);
+            PlayerPrefs.SetInt(_playerPrefsTutorialID, 1);
+            gameObject.SetActive(false);
+        });
     }
 }
