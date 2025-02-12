@@ -94,7 +94,7 @@ namespace Game.Scripts.Audio
         {
             if (_currentMusic != null)
             {
-                _previousSongsStack.Push(_currentMusic); // Armazena a música atual antes de mudar
+                _previousSongsStack.Push(_currentMusic);
             }
 
             if (_musicQueue.Count == 0)
@@ -118,8 +118,8 @@ namespace Game.Scripts.Audio
         {
             if (_previousSongsStack.Count > 0)
             {
-                _musicQueue.Enqueue(_currentMusic); // Adiciona a música atual de volta à fila
-                _currentMusic = _previousSongsStack.Pop(); // Recupera a última música tocada
+                _musicQueue.Enqueue(_currentMusic);
+                _currentMusic = _previousSongsStack.Pop();
                 _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
                 _audioManager.PlayMusic(_currentMusic.soundName);
             }
