@@ -14,10 +14,14 @@ namespace Game.Scripts.Audio
         [SerializeField] private Button _nextSongButton;
         [SerializeField] private Button _previousSongButton;
         [SerializeField] private TextMeshProUGUI _songDetailsText;
+
         [Header("Music List")]
         private List<SoundSO> musicList = new List<SoundSO>();
         private Queue<SoundSO> _musicQueue = new Queue<SoundSO>();
+        private Stack<SoundSO> _previousSongsStack = new Stack<SoundSO>();
+
         private AudioManager _audioManager => AudioManager.I;
+        private SoundSO _currentMusic;
         private bool _isMusicPlaying = true;
 
         private void Awake()
@@ -35,6 +39,7 @@ namespace Game.Scripts.Audio
             _playButton.onClick.AddListener(PlayMusic);
             _pauseButton.onClick.AddListener(PauseMusic);
             _nextSongButton.onClick.AddListener(PlayNextMusic);
+            _previousSongButton.onClick.AddListener(PlayPreviousMusic);
         }
 
         private void ControlButtonState()
@@ -62,13 +67,16 @@ namespace Game.Scripts.Audio
                 PrepareSongRandomization();
             }
         }
+
         #region Button Callbacks
+
         private void PlayMusic()
         {
-            if(_isMusicPlaying)
+            if (_isMusicPlaying)
                 _audioManager.ContinuePausedMusic();
             else
                 PrepareSongRandomization();
+
             _playButton.gameObject.SetActive(false);
             _pauseButton.gameObject.SetActive(true);
             PlayerPrefs.SetInt("IsMusicPlaying", 1);
@@ -81,9 +89,14 @@ namespace Game.Scripts.Audio
             _playButton.gameObject.SetActive(true);
             PlayerPrefs.SetInt("IsMusicPlaying", 0);
         }
-        
+
         private void PlayNextMusic()
         {
+            if (_currentMusic != null)
+            {
+                _previousSongsStack.Push(_currentMusic); // Armazena a música atual antes de mudar
+            }
+
             if (_musicQueue.Count == 0)
             {
                 foreach (var music in musicList)
@@ -94,14 +107,26 @@ namespace Game.Scripts.Audio
 
             if (_musicQueue.Count > 0)
             {
-                SoundSO nextMusic = _musicQueue.Dequeue();
-                _songDetailsText.text = nextMusic.soundName + " - " + nextMusic.artistName;
-                _audioManager.PlayMusic(nextMusic.soundName);
-                Invoke(nameof(StopAndPlayNextMusic), nextMusic.timeSeconds);
+                _currentMusic = _musicQueue.Dequeue();
+                _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
+                _audioManager.PlayMusic(_currentMusic.soundName);
+                Invoke(nameof(StopAndPlayNextMusic), _currentMusic.timeSeconds);
             }
         }
+
+        private void PlayPreviousMusic()
+        {
+            if (_previousSongsStack.Count > 0)
+            {
+                _musicQueue.Enqueue(_currentMusic); // Adiciona a música atual de volta à fila
+                _currentMusic = _previousSongsStack.Pop(); // Recupera a última música tocada
+                _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
+                _audioManager.PlayMusic(_currentMusic.soundName);
+            }
+        }
+
         #endregion
-        
+
         private void StopAndPlayNextMusic()
         {
             if (_isMusicPlaying)
@@ -110,13 +135,12 @@ namespace Game.Scripts.Audio
             }
             PlayNextMusic();
         }
-        
+
         #region Randomize Songs 
 
         private void PrepareSongRandomization()
         {
             SoundSO[] allSongs = _audioManager.GetSongs();
-            
             musicList = ShuffleArray(allSongs).ToList();
             
             foreach (var music in musicList)
@@ -129,6 +153,7 @@ namespace Game.Scripts.Audio
                 PlayNextMusic();
             }
         }
+
         private SoundSO[] ShuffleArray(SoundSO[] songs)
         {
             for (int i = songs.Length - 1; i > 0; i--)
@@ -138,7 +163,7 @@ namespace Game.Scripts.Audio
             }
             return songs;
         }
-        
+
         #endregion
     }
 }
