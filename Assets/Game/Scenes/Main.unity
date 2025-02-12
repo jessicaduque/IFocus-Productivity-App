@@ -1122,7 +1122,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: 135}
+  m_AnchoredPosition: {x: -10, y: 135.00002}
   m_SizeDelta: {x: 140, y: 196}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &80807307
@@ -1843,12 +1843,12 @@ GameObject:
   - component: {fileID: 152395070}
   - component: {fileID: 152395072}
   m_Layer: 0
-  m_Name: TutorialBubble_Image
+  m_Name: TutorialTimerBubble_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &152395069
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1969,8 +1969,8 @@ MonoBehaviour:
   todoListPanel: {fileID: 221890993}
   studyTopicsPanel: {fileID: 317768535}
   statisticsPanel: {fileID: 991881418}
-  blockClicksPanel: {fileID: 0}
-  musicPanel: {fileID: 0}
+  blockClicksPanel: {fileID: 438551399}
+  musicPanel: {fileID: 438551399}
   backgroundTransparencyObject: {fileID: 579529334}
   blurCamera: {fileID: 1923057943}
   deleteTopicWarningPanel: {fileID: 662672732}
@@ -6153,12 +6153,12 @@ GameObject:
   - component: {fileID: 544541186}
   - component: {fileID: 544541188}
   m_Layer: 0
-  m_Name: TutorialBubble_Image
+  m_Name: TutorialComputerBubble_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &544541185
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6166,7 +6166,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544541184}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
