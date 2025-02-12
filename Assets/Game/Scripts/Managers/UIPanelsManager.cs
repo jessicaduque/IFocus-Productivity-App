@@ -12,7 +12,7 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
     [SerializeField] private GameObject todoListPanel;
     [SerializeField] private GameObject studyTopicsPanel;
     [SerializeField] private GameObject statisticsPanel;
-    
+    [SerializeField] private GameObject blockClicksPanel;
     [Header("AINDA NÃO IMPLEMENTADO")]
     [SerializeField] private GameObject musicPanel;
 
@@ -160,6 +160,15 @@ public class UIPanelsManager : Singleton<UIPanelsManager>
             backgroundTransparencyObject.SetActive(false);
             _backgroundTransparencyCanvasGroup.DOFade(0, _panelTime);
         }
+    }
+    
+    #endregion
+    
+    #region Extra
+
+    public void ControlBlockClicksPanel(bool activate)
+    {
+        blockClicksPanel.SetActive(activate);
     }
     
     #endregion

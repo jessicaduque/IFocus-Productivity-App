@@ -24,7 +24,6 @@ public class WaterPlantsSystemManager : MonoBehaviour
     [SerializeField] private Vector2 timeBetweenRoundsSeconds;
     [SerializeField] private float timeForAnimation;
     [Header("UI Elements")] 
-    [SerializeField] private GameObject blockClicksPanel;
     [SerializeField] private Button closeHaveWaterPanelButton;
     private UIPanelsManager _uIPanelsManager => UIPanelsManager.I;
     private AudioManager _audioManager => AudioManager.I;
@@ -104,7 +103,7 @@ public class WaterPlantsSystemManager : MonoBehaviour
     }
     private IEnumerator WaterPlantCoroutine()
     {
-        blockClicksPanel.SetActive(true);
+        _uIPanelsManager.ControlBlockClicksPanel(true);
         _audioManager.PlaySfx("waterPlant");
         _currentDryPlant.waterPlantEffect.SetActive(true);
         yield return new WaitForSeconds(timeForAnimation * 2 / 3);
@@ -112,7 +111,7 @@ public class WaterPlantsSystemManager : MonoBehaviour
         yield return new WaitForSeconds(timeForAnimation / 3);
         _uIPanelsManager.ControlHaveWaterNotificationPanel(true);
         _currentDryPlant.waterPlantEffect.SetActive(false);
-        blockClicksPanel.SetActive(false);
+        _uIPanelsManager.ControlBlockClicksPanel(false);
         float nextRoundTime = Random.Range(timeBetweenRoundsSeconds.x, timeBetweenRoundsSeconds.y);
         StartCoroutine(StartRoundCoroutine(nextRoundTime));
     }

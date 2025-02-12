@@ -17,5 +17,5 @@ MonoBehaviour:
   clip: {fileID: 0}
   loop: 0
   volume: 0
-  pitch: 0
+  pitch: 0.1
   timeSeconds: 0
