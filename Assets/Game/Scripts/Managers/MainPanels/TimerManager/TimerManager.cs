@@ -148,6 +148,7 @@ public class TimerManager : MonoBehaviour
             case TIMER_STATE.TIMER_OFF:
                 minimizedTimer?.SetActive(false); // Se timer é desastivado, o objeto do timer minimizado é desligado 
                 StopAllCoroutines(); // Se timer é desastivado, mata todas as instâncias de corrotina que estão rodando
+                SaveTimerInfo(0, 0, false);
                 break;
             case TIMER_STATE.TIMER_PAUSED:
                 StopAllCoroutines(); // Se timer é pausado, mata todas as instâncias de corrotina que estão rodando

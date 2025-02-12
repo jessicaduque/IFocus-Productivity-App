@@ -39,14 +39,12 @@ public class ButtonExtra : MonoBehaviour
     private void MakeSound()
     {
         _audioManager.PlaySfx(soundEffectName);
-        thisButton.enabled = false;
         if(isActiveAndEnabled) StartCoroutine(Reset());
     }        
 
     IEnumerator Reset()
     {
         yield return new WaitForSeconds(0.1f);
-        thisButton.enabled = true;
     }
 
 }
