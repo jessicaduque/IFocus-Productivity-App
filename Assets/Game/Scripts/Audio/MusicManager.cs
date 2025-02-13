@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Game.Scripts.Audio
         private SoundSO _currentMusic;
         private bool _isMusicPlaying = true;
 
+        private BlackScreenController _blackScreenController => BlackScreenController.I;
         private void Awake()
         {
             SetupButtons();
@@ -31,7 +33,7 @@ namespace Game.Scripts.Audio
 
         private void Start()
         {
-            ControlButtonState();
+            _blackScreenController.gameStartAction += ControlButtonState;
         }
 
         private void SetupButtons()

@@ -203,5 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f71143a51f9f5ad429fda78b1d7ed14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blackScreen_Panel: {fileID: 253081955598664425}
-  _blackScreen_CanvasGroup: {fileID: 6692053279656874505}
+  blackScreen_Panel: {fileID: 253081955598664425}
+  blackScreen_CanvasGroup: {fileID: 6692053279656874505}
+  intialGamePanel: {fileID: 0}
+  intialGamePanel_CcanvasGroup: {fileID: 0}
