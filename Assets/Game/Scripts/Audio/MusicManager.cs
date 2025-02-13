@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -23,7 +24,7 @@ namespace Game.Scripts.Audio
 
         private AudioManager _audioManager => AudioManager.I;
         private SoundSO _currentMusic;
-        private bool _isMusicPlaying = true;
+        private bool _isMusicPaused;
 
         private BlackScreenController _blackScreenController => BlackScreenController.I;
         private void Awake()
@@ -34,6 +35,24 @@ namespace Game.Scripts.Audio
         private void Start()
         {
             _blackScreenController.gameStartAction += ControlButtonState;
+        }
+
+        private void Update()
+        {
+            string queu = "musicqueu: ";
+            foreach (SoundSO sound in _musicQueue)
+            {
+                queu += sound.soundName + "  /  ";
+            }
+            Debug.Log(queu);
+            
+            
+            string prev = "musicprev: ";
+            foreach (SoundSO soundaa in _previousSongsStack)
+            {
+                prev += soundaa.soundName + "  /  ";
+            }
+            Debug.Log(prev);
         }
 
         private void SetupButtons()
@@ -50,35 +69,33 @@ namespace Game.Scripts.Audio
             {
                 if (PlayerPrefs.GetInt("IsMusicPlaying") == 1)
                 {
+                    _isMusicPaused = false;
                     _playButton.gameObject.SetActive(false);
                     _pauseButton.gameObject.SetActive(true);
-                    PrepareSongRandomization();
                 }
                 else
                 {
-                    _isMusicPlaying = false;
+                    _isMusicPaused = true;
                     _pauseButton.gameObject.SetActive(false);
                     _playButton.gameObject.SetActive(true);
                 }
             }
             else
             {
+                _isMusicPaused = false;
                 PlayerPrefs.SetInt("IsMusicPlaying", 1);
                 _playButton.gameObject.SetActive(false);
                 _pauseButton.gameObject.SetActive(true);
-                PrepareSongRandomization();
             }
+            PrepareSongRandomization();
         }
 
         #region Button Callbacks
 
         private void PlayMusic()
         {
-            if (_isMusicPlaying)
-                _audioManager.ContinuePausedMusic();
-            else
-                PrepareSongRandomization();
-
+            _isMusicPaused = false;
+            _audioManager.ContinuePausedMusic();
             _playButton.gameObject.SetActive(false);
             _pauseButton.gameObject.SetActive(true);
             PlayerPrefs.SetInt("IsMusicPlaying", 1);
@@ -86,6 +103,7 @@ namespace Game.Scripts.Audio
 
         private void PauseMusic()
         {
+            _isMusicPaused = true;
             _audioManager.PauseMusic();
             _pauseButton.gameObject.SetActive(false);
             _playButton.gameObject.SetActive(true);
@@ -94,11 +112,6 @@ namespace Game.Scripts.Audio
 
         private void PlayNextMusic()
         {
-            if (_currentMusic != null)
-            {
-                _previousSongsStack.Push(_currentMusic);
-            }
-
             if (_musicQueue.Count == 0)
             {
                 foreach (var music in musicList)
@@ -109,10 +122,19 @@ namespace Game.Scripts.Audio
 
             if (_musicQueue.Count > 0)
             {
+                if (_currentMusic != null)
+                {
+                    _previousSongsStack.Push(_currentMusic); 
+                }
+
                 _currentMusic = _musicQueue.Dequeue();
-                _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
+
+                UpdateMusicUI();
                 _audioManager.PlayMusic(_currentMusic.soundName);
-                Invoke(nameof(StopAndPlayNextMusic), _currentMusic.timeSeconds);
+                if (_isMusicPaused) _audioManager.PauseMusic();
+
+                StopAllCoroutines();
+                StartCoroutine(CountdownTillNextSongCoroutine(_currentMusic.timeSeconds));
             }
         }
 
@@ -120,21 +142,52 @@ namespace Game.Scripts.Audio
         {
             if (_previousSongsStack.Count > 0)
             {
-                _musicQueue.Enqueue(_currentMusic);
-                _currentMusic = _previousSongsStack.Pop();
-                _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
-                _audioManager.PlayMusic(_currentMusic.soundName);
+                SoundSO previousMusic = _previousSongsStack.Pop();
+
+                if (_currentMusic != previousMusic)
+                {
+                    _musicQueue.Enqueue(_currentMusic);
+                    _currentMusic = previousMusic;
+                }
             }
+            else
+            {
+                if (_currentMusic == null && musicList.Count > 0)
+                {
+                    _currentMusic = musicList[0];
+                }
+            }
+
+            UpdateMusicUI();
+            _audioManager.PlayMusic(_currentMusic.soundName);
+            if (_isMusicPaused) _audioManager.PauseMusic();
+
+            StopAllCoroutines();
+            StartCoroutine(CountdownTillNextSongCoroutine(_currentMusic.timeSeconds));
         }
+        
 
         #endregion
-
-        private void StopAndPlayNextMusic()
+        private void UpdateMusicUI()
         {
-            if (_isMusicPlaying)
+            if (_currentMusic.artistName == "")
+                _songDetailsText.text = $"{_currentMusic.soundName}";
+            else
+                _songDetailsText.text = $"{_currentMusic.soundName} - {_currentMusic.artistName}";
+        }
+        private IEnumerator CountdownTillNextSongCoroutine(float songTime)
+        {
+            float time = 0;
+            while (time < songTime)
             {
-                _audioManager.StopMusic();
+                if (!_isMusicPaused)
+                {
+                    time += Time.deltaTime;
+                }
+                
+                yield return null;
             }
+            _audioManager.StopMusic();
             PlayNextMusic();
         }
 

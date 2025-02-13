@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
-  m_Name: Cozy Place
+  m_Name: Cozy_Place
   m_EditorClassIdentifier: 
-  soundName: 
+  soundName: Cozy Place
   artistName: 
-  clip: {fileID: 0}
+  clip: {fileID: 8300000, guid: 89961728271ce25449fedebc37eed295, type: 3}
   loop: 0
-  volume: 0
-  pitch: 0
-  timeSeconds: 0
+  volume: 1
+  pitch: 1
+  timeSeconds: 236

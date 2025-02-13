@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
   m_Name: Fragile
   m_EditorClassIdentifier: 
-  soundName: 
+  soundName: Fragile
   artistName: 
-  clip: {fileID: 0}
+  clip: {fileID: 8300000, guid: 55aeb8b7e87f6d3498ca5e5789688a3e, type: 3}
   loop: 0
-  volume: 0
-  pitch: 0
-  timeSeconds: 0
+  volume: 1
+  pitch: 1
+  timeSeconds: 204
