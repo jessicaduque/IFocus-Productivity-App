@@ -139,6 +139,7 @@ public class TodoListManager : Singleton<TodoListManager>
                 todoObjectIndex--;
             }
         }
+        UpdateProgressBarUI();
     }
     public void DeleteItem(TodoListObject item)
     {
