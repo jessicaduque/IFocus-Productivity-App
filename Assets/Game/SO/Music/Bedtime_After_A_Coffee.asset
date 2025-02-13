@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bedtime_After_A_Coffee
   m_EditorClassIdentifier: 
   soundName: Bedtime After A Coffee
-  artistName: Barradeen
+  artistName: Ikkunn
   clip: {fileID: 8300000, guid: 9acc47cc7ac48ff408695a5b8d27a603, type: 3}
   loop: 0
   volume: 1

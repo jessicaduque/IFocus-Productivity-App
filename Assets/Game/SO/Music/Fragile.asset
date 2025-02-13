@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fragile
   m_EditorClassIdentifier: 
   soundName: Fragile
-  artistName: 
+  artistName: Keys of Moon
   clip: {fileID: 8300000, guid: 55aeb8b7e87f6d3498ca5e5789688a3e, type: 3}
   loop: 0
   volume: 1

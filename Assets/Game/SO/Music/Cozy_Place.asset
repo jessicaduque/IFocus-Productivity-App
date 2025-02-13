@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cozy_Place
   m_EditorClassIdentifier: 
   soundName: Cozy Place
-  artistName: 
+  artistName: Keys of Moon
   clip: {fileID: 8300000, guid: 89961728271ce25449fedebc37eed295, type: 3}
   loop: 0
   volume: 1

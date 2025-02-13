@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Memories Of Spring
   m_EditorClassIdentifier: 
   soundName: Memories of Spring
-  artistName: 
+  artistName: Tokyo Music Walker
   clip: {fileID: 8300000, guid: 21e06655501e03b40a1f0c5d32a21ca0, type: 3}
   loop: 0
   volume: 1

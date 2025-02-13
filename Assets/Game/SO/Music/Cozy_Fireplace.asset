@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cozy_Fireplace
   m_EditorClassIdentifier: 
   soundName: Cozy Fireplace
-  artistName: 
+  artistName: Purrple Cat
   clip: {fileID: 8300000, guid: d2cdcd5fce35e964dbbc9e2cd2ea834b, type: 3}
   loop: 0
   volume: 1
