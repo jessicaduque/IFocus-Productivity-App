@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14392cc47a16e954791b08fc833760e0, type: 3}
   m_Name: New Sound
   m_EditorClassIdentifier: 
-  soundName: 
-  artistName: 
-  clip: {fileID: 0}
+  soundName: Sugar Coat
+  artistName: Purrple Cat
+  clip: {fileID: 8300000, guid: b9cfd22bf99f5a742a29e342dce72fee, type: 3}
   loop: 0
-  volume: 0
-  pitch: 0
-  timeSeconds: 0
+  volume: 1
+  pitch: 1
+  timeSeconds: 178
