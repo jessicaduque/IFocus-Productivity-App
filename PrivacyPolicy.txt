@@ -1,0 +1,6 @@
+This app does not collect or store any personal information.
+
+If installed from the Google Play Store, Google Play may collect some personal information. This can be clarified through the Google Play Services Privacy Policy at the following link:
+https://policies.google.com/privacy
+
+If you have any questions regarding this policy, please contact Jessica Duque at: jduquedeveloper@gmail.com
